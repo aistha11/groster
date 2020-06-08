@@ -1,10 +1,7 @@
-import 'package:groster/enum/user_state.dart';
+// import 'package:groster/enum/user_state.dart';
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/widgets/appbar.dart';
-// import 'package:groster/pages/wrapper.dart';
-// import 'package:groster/provider/user_provider.dart';
-import 'package:groster/resources/auth_methods.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
 import 'package:groster/utils/utilities.dart';
@@ -12,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatelessWidget {
-  final AuthMethods authMethods = AuthMethods();
+  // final UserRepository authMethods = UserRepository.instance();
 
   @override
   Widget build(BuildContext context) {
@@ -110,31 +107,21 @@ class Profile extends StatelessWidget {
                     contentPadding: EdgeInsets.only(left: 70.0),
                     onTap: () {},
                   ),
-                  ListTile(
-                    title: Text(
-                      "Log Out",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    contentPadding: EdgeInsets.only(left: 70.0),
-                    onTap: () async {
-                      final bool isLoggedOut = await authMethods.signOut();
-                      if (isLoggedOut) {
-                        // set userState to offline as the user logs out'
-                        authMethods.setUserState(
-                          userId: userProvider.getUser.uid,
-                          userState: UserState.Offline,
-                        );
-                        Navigator.pop(context);
+                  // ListTile(
+                  //   title: Text(
+                  //     "Log Out",
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  //   contentPadding: EdgeInsets.only(left: 70.0),
+                  //   onTap: () async {
 
-                        // move the user to login screen
-                        // Navigator.pushAndRemoveUntil(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => Wrapper()),
-                        //   (Route<dynamic> route) => false,
-                        // );
-                      }
-                    },
-                  ),
+                  //      authMethods.setUserState(
+                  //         userId: userProvider.user.uid,
+                  //         userState: UserState.Offline,
+                  //      );
+                  //      await userProvider.signOut().then((value) => Navigator.pop(context));
+                  //   },
+                  // ),
                 ],
               ),
             )

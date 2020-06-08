@@ -12,7 +12,7 @@ class UserCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final UserProvider userProvider = Provider.of<UserProvider>(context);
-    UserRepository userProvider = Provider.of<UserRepository>(context);
+    UserRepository userProvider = Provider.of<UserRepository>(context, listen: true);
     // var uid = userProvider.user.uid;
     // print("Uid from UserRepository in userCircle is $uid");
     return GestureDetector(
@@ -33,7 +33,8 @@ class UserCircle extends StatelessWidget {
               child: 
               userProvider.user.photoUrl == null ?
                      Text(
-                      Utils.getInitials(userProvider.getUser.name),
+                      // Utils.getInitials(userProvider.user.displayName),
+                      "${Utils.getInitials(userProvider.user.displayName)}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: UniversalVariables.lightBlueColor,
@@ -41,7 +42,7 @@ class UserCircle extends StatelessWidget {
                       ),
                     )
                   : CachedImage(
-                      userProvider.user.photoUrl,
+                      userProvider.getUser.profilePhoto,
                       isRound: true,
                       radius: 45,
                     ),

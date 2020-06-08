@@ -6,8 +6,6 @@ import 'package:groster/pages/home/familyChat/chats/widgets/online_dot_indicator
 import 'package:groster/pages/home/familyChat/chatscreens/chat_screen.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/widgets/custom_tile.dart';
-// import 'package:groster/provider/user_provider.dart';
-import 'package:groster/resources/auth_methods.dart';
 import 'package:groster/resources/chat_methods.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
@@ -17,7 +15,7 @@ import 'last_message_container.dart';
 
 class ContactView extends StatelessWidget {
   final Contact contact;
-  final AuthMethods _authMethods = AuthMethods();
+  final UserRepository _authMethods = UserRepository.instance();
 
   ContactView(this.contact);
 

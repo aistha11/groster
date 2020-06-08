@@ -9,9 +9,10 @@ import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.d
 import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/pages/widgets/custom_tile.dart';
 import 'package:groster/provider/image_upload_provider.dart';
-import 'package:groster/resources/auth_methods.dart';
+// import 'package:groster/resources/auth_methods.dart';
 import 'package:groster/resources/chat_methods.dart';
 import 'package:groster/resources/storage_methods.dart';
+import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
 import 'package:groster/utils/utilities.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   final StorageMethods _storageMethods = StorageMethods();
   final ChatMethods _chatMethods = ChatMethods();
-  final AuthMethods _authMethods = AuthMethods();
+  final UserRepository _authMethods = UserRepository.instance();
 
   TextEditingController textFieldController = TextEditingController();
   FocusNode textFieldFocus = FocusNode();

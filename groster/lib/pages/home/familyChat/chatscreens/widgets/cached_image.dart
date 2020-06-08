@@ -10,8 +10,8 @@
 
     final BoxFit fit;
 
-    final String noImageAvailable =
-    "https://www.esm.rochester.edu/uploads/NoPhotoAvailable.jpg";
+    // final String noImageAvailable =
+    // "https://www.esm.rochester.edu/uploads/NoPhotoAvailable.jpg";
 
     CachedImage(
       this.imageUrl, {
@@ -36,12 +36,17 @@
                 placeholder: (context, url) =>
                     Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) =>
-                    Image.network(noImageAvailable, fit: BoxFit.cover),
+                    // Image.network(noImageAvailable, fit: BoxFit.cover),
+                    Image.asset("images/blankProfile.jpg",fit: BoxFit.cover,),
               )),
         );
       } catch (e) {
         print(e);
-        return Image.network(noImageAvailable, fit: BoxFit.cover);
+        // return Image.network(noImageAvailable, fit: BoxFit.cover);
+        return ClipRRect(
+              borderRadius: BorderRadius.circular(isRound ? 50 : radius),
+              child: Image.asset("images/blankProfile.jpg",fit: BoxFit.cover,)
+        );
       }
     }
   }

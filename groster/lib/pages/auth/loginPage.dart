@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:groster/enum/auth_state.dart';
-// import 'package:groster/provider/user_provider.dart';
-import 'package:groster/resources/auth_methods.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +14,6 @@ class _LoginState extends State<Login> {
 
   bool signInForm;
 
-  AuthMethods _authMethods = AuthMethods();
-
   @override
   void initState() {
     super.initState();
@@ -30,15 +26,15 @@ class _LoginState extends State<Login> {
     //Asynchronous Function For Firebase Login
     googleSignIn() async {
       print('Login With Google');
-      var currentuser = await _authMethods.signInWithGoogle();
+      var currentuser = await user.signInWithGoogle();
       print(currentuser.uid);
       print(currentuser.email);
       print(currentuser.displayName);
       print(currentuser.photoUrl);
       if(currentuser!=null){
-        _authMethods.authenticateUser(currentuser).then((isNewUser){
+        user.authenticateUser(currentuser).then((isNewUser){
           if(isNewUser)
-            _authMethods.addDataToDb(currentuser);
+            user.addDataToDb(currentuser);
           // print("Added user to db");
         });
       }
@@ -70,17 +66,18 @@ class _LoginState extends State<Login> {
                 Container(
                   height: signInForm ? 200.0 : 180.0,
                   decoration: BoxDecoration(
-                    color: Colors.grey,
+                    // color: Colors.grey,
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(80.0),
                         bottomRight: Radius.circular(80.0)),
                   ),
-                  child: Center(
-                    child: Text(
-                      'Family App List',
-                      style: TextStyle(fontSize: 27.0),
-                    ),
-                  ),
+                  // child: Center(
+                  //   child: Text(
+                  //     'Family App List',
+                  //     style: TextStyle(fontSize: 27.0),
+                  //   ),
+                  // ),
+                  child: Image.asset("images/grocery2.jpg",fit: BoxFit.cover),
                 ),
                 //Loading Progress Bar while Authenticating
                 user.status == Status.Authenticating
@@ -305,8 +302,12 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final FocusNode lastName = FocusNode();
+  final FocusNode emailField = FocusNode();
   final FocusNode passwordField = FocusNode();
   final FocusNode confirmPasswordField = FocusNode();
+  TextEditingController _fName;
+  TextEditingController _lName;
   TextEditingController _email;
   TextEditingController _password;
   TextEditingController _confirmPassword;
@@ -316,6 +317,8 @@ class _SignUpState extends State<SignUp> {
 
   @override
   void initState() {
+    _fName = TextEditingController();
+    _lName = TextEditingController();
     _email = TextEditingController();
     _password = TextEditingController();
     _confirmPassword = TextEditingController();
@@ -335,13 +338,67 @@ class _SignUpState extends State<SignUp> {
         child: Column(
           children: [
             //SignUp
-            Icon(
-              FontAwesomeIcons.peopleCarry,
-              size: 50.0,
+            // Icon(
+            //   FontAwesomeIcons.peopleCarry,
+            //   size: 50.0,
+            // ),
+            //First Name
+            Container(
+              margin: EdgeInsets.only(left: 40, right: 40.0, top: 10.0),
+              child: TextFormField(
+                validator: (val) {
+                  if(val.isEmpty) return "*Enter your First Name";
+                  return null;
+                },
+                controller: _fName,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  // prefixIcon: Icon(Icons.person),
+                  hintText: 'First Name',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                  ),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                ),
+                onEditingComplete: () {
+                  FocusScope.of(context).requestFocus(lastName);
+                },
+              ),
+            ),
+            //Last Name
+            Container(
+              margin: EdgeInsets.only(left: 40, right: 40.0, top: 10.0),
+              child: TextFormField(
+                validator: (val) {
+                  if(val.isEmpty) return "*Enter your Last Name";
+                  return null;
+                },
+                controller: _lName,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  // prefixIcon: Icon(Icons.person),
+                  hintText: 'Last Name',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                  ),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                ),
+                onEditingComplete: () {
+                  FocusScope.of(context).requestFocus(emailField);
+                },
+              ),
             ),
             //Username
             Container(
-              margin: EdgeInsets.only(left: 40, right: 40.0, top: 30.0),
+              margin: EdgeInsets.only(left: 40, right: 40.0, top: 10.0),
               child: TextFormField(
                 validator: (val) {
                   return RegExp(
@@ -371,7 +428,7 @@ class _SignUpState extends State<SignUp> {
             ),
             //Password
             Container(
-              margin: EdgeInsets.only(left: 40, right: 40.0, top: 20.0),
+              margin: EdgeInsets.only(left: 40, right: 40.0, top: 10.0),
               child: TextFormField(
                 validator: (val) {
                   if (val.isEmpty) return "*Password is required";
@@ -409,7 +466,7 @@ class _SignUpState extends State<SignUp> {
             ),
             //Conform Password
             Container(
-              margin: EdgeInsets.only(left: 40, right: 40.0, top: 20.0),
+              margin: EdgeInsets.only(left: 40, right: 40.0, top: 10.0),
               child: TextFormField(
                 validator: (val) {
                   if (val.isEmpty) return "*Confirm Password is required";
@@ -453,7 +510,8 @@ class _SignUpState extends State<SignUp> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   if (_confirmPassword.text == _password.text) {
-                    if (!await user.signUp(_email.text, _password.text))
+                    String name = "${_fName.text} ${_lName.text}";
+                    if (!await user.signUp(_email.text, _password.text, name))
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(

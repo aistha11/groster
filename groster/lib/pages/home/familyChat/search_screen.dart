@@ -1,7 +1,8 @@
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/chat_screen.dart';
 import 'package:groster/pages/widgets/custom_tile.dart';
-import 'package:groster/resources/auth_methods.dart';
+// import 'package:groster/resources/auth_methods.dart';
+import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final AuthMethods _authMethods = AuthMethods();
+  final UserRepository _authMethods = UserRepository.instance();
 
   List<User> userList;
   String query = "";

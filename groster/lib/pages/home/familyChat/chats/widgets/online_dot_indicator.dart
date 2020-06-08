@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:groster/enum/user_state.dart';
 import 'package:groster/models/user.dart';
-import 'package:groster/resources/auth_methods.dart';
+import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/utilities.dart';
 
 class OnlineDotIndicator extends StatelessWidget {
   final String uid;
-  final AuthMethods _authMethods = AuthMethods();
+  final UserRepository _authMethods = UserRepository.instance();
 
   OnlineDotIndicator({
     @required this.uid,

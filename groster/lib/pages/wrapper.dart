@@ -1,7 +1,6 @@
 import 'package:groster/enum/auth_state.dart';
 import 'package:groster/pages/auth/loginPage.dart';
-// import 'package:groster/pages/home/home.dart';
-import 'package:groster/pages/homePage.dart';
+import 'package:groster/pages/home/home.dart';
 import 'package:groster/pages/widgets/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:groster/resources/user_repository.dart';
@@ -15,11 +14,10 @@ class Wrapper extends StatelessWidget {
         case Status.Uninitialized:
           return Splash();
         case Status.Unauthenticated:
-          return Login();
         case Status.Authenticating:
-               return Splash();
+               return Login();
         case Status.Authenticated:
-          return HomePage();
+          return Home();
         default:
           return Splash();
       }

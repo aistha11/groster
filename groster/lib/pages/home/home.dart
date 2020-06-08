@@ -1,13 +1,9 @@
 import 'package:groster/enum/user_state.dart';
 import 'package:groster/pages/home/familyChat/chats/chat_list_screen.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/user_circle.dart';
-// import 'package:groster/pages/home/familyChat/chats/widgets/user_circle.dart';
 import 'package:groster/pages/home/masterList/masterList.dart';
 import 'package:groster/pages/home/personalList/personalList.dart';
 import 'package:groster/pages/widgets/appbar.dart';
-// import 'package:groster/pages/widgets/appbar.dart';
-// import 'package:groster/provider/user_provider.dart';
-import 'package:groster/resources/auth_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:groster/resources/user_repository.dart';
@@ -25,7 +21,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   int _page = 0;
   UserRepository userProvider;
 
-  final AuthMethods _authMethods = AuthMethods();
+  final UserRepository _authMethods = UserRepository.instance();
 
   @override
   void initState() {
@@ -36,7 +32,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       await userProvider.refreshUser();
 
       _authMethods.setUserState(
-        userId: userProvider.getUser.uid,
+        userId: userProvider.user.uid,
         userState: UserState.Online,
       );
     });
@@ -109,12 +105,33 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       return Text('Chat');
   }
 
+  final List<PopupMenuItem<String>> _popUpMenuItems = [
+    PopupMenuItem(
+      child: Text("Logout"),
+      value: "Logout",
+    )
+  ];
+
   CustomAppBar customAppBar(BuildContext context) {
-    // final UserProvider userProvider = Provider.of<UserProvider>(context);
+    // final UserRepository userProvider = Provider.of<UserRepository>(context);
     return CustomAppBar(
       leading: UserCircle(),
       title: getTitle(),
       centerTitle: false,
+      actions: [
+        // IconButton(
+        //   icon: Icon(Icons.more_vert),
+        //   onPressed: () {},
+        // ),
+        PopupMenuButton<String>(
+          itemBuilder: (_) => _popUpMenuItems,
+          onSelected: (String value){
+            if(value == "Logout"){
+              _authMethods.signOut();
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -132,7 +149,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         children: [
           MasterList(),
           PersonalList(),
-          ChatListScreen(), 
+          ChatListScreen(),
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
