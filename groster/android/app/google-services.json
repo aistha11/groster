@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "102247487646",
+    "firebase_url": "https://grosterapp.firebaseio.com",
+    "project_id": "grosterapp",
+    "storage_bucket": "grosterapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102247487646:android:ffc7ad08112c3d6935438f",
+        "android_client_info": {
+          "package_name": "com.example.groster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102247487646-ijh4rap1j46hoksvimvjo3evfi3i77us.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.groster",
+            "certificate_hash": "955c7cfb0aa65664ac7071cb2cfb8d024be6cf01"
+          }
+        },
+        {
+          "client_id": "102247487646-mrnujts61mldnlnq648bes4hr5p260nn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5TA9wGuTGJD1XBK7HUiHpL9np-uLn5nE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102247487646-mrnujts61mldnlnq648bes4hr5p260nn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
