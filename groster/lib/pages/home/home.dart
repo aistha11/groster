@@ -119,10 +119,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       title: getTitle(),
       centerTitle: false,
       actions: [
-        // IconButton(
-        //   icon: Icon(Icons.more_vert),
-        //   onPressed: () {},
-        // ),
+        IconButton(
+          icon: Icon(Icons.people),
+          onPressed: () {
+            Navigator.of(context).pushNamed("/ourFamily");
+          },
+        ),
         PopupMenuButton<String>(
           itemBuilder: (_) => _popUpMenuItems,
           onSelected: (String value){
