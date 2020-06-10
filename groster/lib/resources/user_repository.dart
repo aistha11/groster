@@ -1,28 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:groster/constants/strings.dart';
 import 'package:groster/enum/auth_state.dart';
 import 'package:groster/enum/user_state.dart';
 import 'package:groster/models/user.dart';
+import 'package:groster/utils/func.dart';
 import 'package:groster/utils/utilities.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
-
-class UserRepository with ChangeNotifier { 
+class UserRepository with ChangeNotifier {
   FirebaseAuth _auth;
   FirebaseUser _user;
   GoogleSignIn _googleSignIn;
   User _fuser;
   Status _status = Status.Uninitialized;
+  static final FacebookLogin facebookSignIn = new FacebookLogin();
 
   static final Firestore _firestore = Firestore.instance;
   static final Firestore firestore = Firestore.instance;
 
   static final CollectionReference _userCollection =
       _firestore.collection(USERS_COLLECTION);
-
 
   UserRepository.instance()
       : _auth = FirebaseAuth.instance,
@@ -35,24 +35,24 @@ class UserRepository with ChangeNotifier {
   User get getUser => _fuser;
 
   Future<FirebaseUser> getCurrentUser() async {
-    try{
+    try {
       FirebaseUser currentUser;
-    currentUser = await _auth.currentUser();
-    return currentUser;
-    }catch(e){
+      currentUser = await _auth.currentUser();
+      return currentUser;
+    } catch (e) {
       print(e);
-      return null; 
+      return null;
     }
   }
 
   Future<User> getUserDetails() async {
-    try{
+    try {
       FirebaseUser currentUser = await getCurrentUser();
 
-    DocumentSnapshot documentSnapshot =
-        await _userCollection.document(currentUser.uid).get();
-    return User.fromMap(documentSnapshot.data);
-    }catch(e){
+      DocumentSnapshot documentSnapshot =
+          await _userCollection.document(currentUser.uid).get();
+      return User.fromMap(documentSnapshot.data);
+    } catch (e) {
       print("Error while getiing user detail");
       print(e);
       return _fuser;
@@ -81,11 +81,10 @@ class UserRepository with ChangeNotifier {
   Stream<DocumentSnapshot> getUserStream({@required String uid}) =>
       _userCollection.document(uid).snapshots();
 
-
   Future<void> refreshUser() async {
     User user = await getUserDetails();
     _fuser = user;
-    notifyListeners(); 
+    notifyListeners();
   }
 
   Future<bool> authenticateUser(FirebaseUser user) async {
@@ -130,7 +129,6 @@ class UserRepository with ChangeNotifier {
         .collection(USERS_COLLECTION)
         .document(newUser.uid)
         .setData(user.toMap(user));
-
   }
 
   Future<bool> signIn(String email, String password) async {
@@ -148,21 +146,22 @@ class UserRepository with ChangeNotifier {
     }
   }
 
-  Future<bool> signUp(String email, String password, String name) async {
+  Future<bool> signUp(BuildContext context,String email, String password, String name) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-       await _auth.createUserWithEmailAndPassword(
-          email: email, password: password).then((result){
-            if(result.user != null){
-              authenticateUser(result.user).then((isNewUser){
-                if(isNewUser)
-                  addDataToFdb(result.user, name);
-              });
-            }
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((result) {
+        if (result.user != null) {
+          authenticateUser(result.user).then((isNewUser) {
+            if (isNewUser) addDataToFdb(result.user, name);
           });
+        }
+      });
       return true;
     } catch (e) {
+      Func.showError(context, e.toString());
       print(e.toString());
       _status = Status.Unauthenticated;
       notifyListeners();
@@ -170,7 +169,7 @@ class UserRepository with ChangeNotifier {
     }
   }
 
-  Future<FirebaseUser> signInWithGoogle() async {
+  Future<void> signInWithGoogle(context) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
@@ -182,14 +181,96 @@ class UserRepository with ChangeNotifier {
           accessToken: _signInAuthentication.accessToken,
           idToken: _signInAuthentication.idToken);
 
-      var result = await _auth.signInWithCredential(credential);
-      return result.user;
+      await _auth.signInWithCredential(credential).then((value){
+        if(value.user != null){
+             authenticateUser(value.user).then((isNewUser){
+               addDataToDb(value.user);
+             });
+           }
+      });
     } catch (e) {
-      print("Auth methods error");
+      Func.showError(context, "Error While Sign In With Google");
       print(e);
-       _status = Status.Unauthenticated;
+      _status = Status.Unauthenticated;
       notifyListeners();
-      return null;
+      // return null;
+    }
+  }
+
+  // //FaceBook Login
+  // Future<void> signUpWithFacebook(context) async {
+  //   _status = Status.Authenticating;
+  //   notifyListeners();
+  //   FacebookLogin fbLogin = FacebookLogin();
+  //   fbLogin.logIn(['email', 'public_profile']).then((result) {
+  //     if (result.status == FacebookLoginStatus.loggedIn) {
+  //       final AuthCredential credential = FacebookAuthProvider.getCredential(
+  //         accessToken: result.accessToken.token,
+  //       );
+  //       _auth.signInWithCredential(credential).then((result) {
+  //         if (result.user != null) {
+  //           authenticateUser(result.user).then((isNewUser) {
+  //             if (isNewUser) addDataToDb(result.user);
+  //           });
+  //         }
+  //       }).catchError((e) {
+  //         print(e.toString());
+  //         _status = Status.Unauthenticated;
+  //         notifyListeners();
+  //         return false;
+  //       });
+  //     }
+  //   }).catchError((e) {
+  //     _status = Status.Unauthenticated;
+  //     notifyListeners();
+  //     return false;
+  //   });
+  // }
+
+  Future<Null> signUpWithFacebook(context) async {
+    try{
+      _status = Status.Authenticating;
+      notifyListeners();
+      final FacebookLoginResult result =
+        await facebookSignIn.logIn(['email']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        final FacebookAccessToken accessToken = result.accessToken;
+        final AuthCredential credential = FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token,
+        );
+        print('''
+         Logged in!
+         
+         Token: ${accessToken.token}
+         User id: ${accessToken.userId}
+         Expires: ${accessToken.expires}
+         Permissions: ${accessToken.permissions}
+         Declined permissions: ${accessToken.declinedPermissions}
+         ''');
+         await _auth.signInWithCredential(credential).then((value){
+           if(value.user != null){
+             authenticateUser(value.user).then((isNewUser){
+               addDataToDb(value.user);
+             });
+           }
+         });
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        _status = Status.Unauthenticated;
+        notifyListeners();
+        print('Login cancelled by the user.');
+        break;
+      case FacebookLoginStatus.error:
+        _status = Status.Unauthenticated;
+        notifyListeners();
+        Func.showError(context, 'Something went wrong with the login process.\n'
+            'Here\'s the error Facebook gave us: ${result.errorMessage}');
+        break;
+    }
+    }catch(e){
+      print(e.toString());
     }
   }
 
@@ -206,23 +287,21 @@ class UserRepository with ChangeNotifier {
     return userList;
   }
 
-
   Future<void> signOut() async {
-    try{
+    try {
       setUserState(userId: user.uid, userState: UserState.Offline);
       _auth.signOut();
-    _googleSignIn.signOut();
-    _status = Status.Unauthenticated;
-    notifyListeners();
-    return Future.delayed(Duration.zero);
-    }catch(e){
+      _googleSignIn.signOut();
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      return Future.delayed(Duration.zero);
+    } catch (e) {
       print(e.toString());
       _status = Status.Authenticated;
       notifyListeners();
       return false;
     }
   }
-
 
   Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {

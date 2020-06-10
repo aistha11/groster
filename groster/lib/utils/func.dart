@@ -13,4 +13,13 @@ class Func {
       ),
     );
   }
+
+  static showError(context,String msg) {
+    showDialog(
+      context: context,
+      child: AlertDialog(
+        title: Text(msg),
+      ),
+    );
+  }
 }

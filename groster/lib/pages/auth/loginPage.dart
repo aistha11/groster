@@ -26,22 +26,23 @@ class _LoginState extends State<Login> {
     //Asynchronous Function For Firebase Login
     googleSignIn() async {
       print('Login With Google');
-      var currentuser = await user.signInWithGoogle();
-      print(currentuser.uid);
-      print(currentuser.email);
-      print(currentuser.displayName);
-      print(currentuser.photoUrl);
-      if(currentuser!=null){
-        user.authenticateUser(currentuser).then((isNewUser){
-          if(isNewUser)
-            user.addDataToDb(currentuser);
-          // print("Added user to db");
-        });
-      }
+      await user.signInWithGoogle(context);
+      // print(currentuser.uid);
+      // print(currentuser.email);
+      // print(currentuser.displayName);
+      // print(currentuser.photoUrl);
+      // if(currentuser!=null){
+      //   user.authenticateUser(currentuser).then((isNewUser){
+      //     if(isNewUser)
+      //       user.addDataToDb(currentuser);
+      //     // print("Added user to db");
+      //   });
+      // }
     }
 
     facebookSignIn() async {
       print('Login With Facebook');
+      await user.signUpWithFacebook(context);
     }
 
     return WillPopScope(
@@ -511,7 +512,7 @@ class _SignUpState extends State<SignUp> {
                 if (_formKey.currentState.validate()) {
                   if (_confirmPassword.text == _password.text) {
                     String name = "${_fName.text} ${_lName.text}";
-                    if (!await user.signUp(_email.text, _password.text, name))
+                    if (!await user.signUp(context, _email.text, _password.text, name))
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(

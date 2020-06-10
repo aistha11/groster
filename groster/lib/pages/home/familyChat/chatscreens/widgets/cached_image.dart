@@ -34,7 +34,7 @@
                 imageUrl: imageUrl,
                 fit: fit,
                 placeholder: (context, url) =>
-                    Center(child: CircularProgressIndicator()),
+                    Center(child: Image.asset("images/blankProfile.jpg",fit: BoxFit.cover,)),
                 errorWidget: (context, url, error) =>
                     // Image.network(noImageAvailable, fit: BoxFit.cover),
                     Image.asset("images/blankProfile.jpg",fit: BoxFit.cover,),
