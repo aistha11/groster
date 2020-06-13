@@ -1,13 +1,13 @@
-import 'package:groster/models/note.dart';
+import 'package:groster/models/masterNote.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class NoteItem extends StatelessWidget {
-  final Note note;
-  final Function(Note) onEdit;
-  final Function(Note) onDelete;
-  final Function(Note) onTap;
-  const NoteItem(
+class MasterNoteItem extends StatelessWidget {
+  final MasterNote note;
+  final Function(MasterNote) onEdit;
+  final Function(MasterNote) onDelete;
+  final Function(MasterNote) onTap;
+  const MasterNoteItem(
       {Key key,
       @required this.note,
       @required this.onEdit,

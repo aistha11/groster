@@ -1,20 +1,13 @@
-
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
-import 'package:groster/utils/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class UserCircle extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
-    // final UserProvider userProvider = Provider.of<UserProvider>(context);
-    UserRepository userProvider = Provider.of<UserRepository>(context, listen: true);
-    // var uid = userProvider.user.uid;
-    // print("Uid from UserRepository in userCircle is $uid");
+    UserRepository user = Provider.of<UserRepository>(context) ?? null;
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed("/profile");
@@ -30,22 +23,11 @@ class UserCircle extends StatelessWidget {
           children: <Widget>[
             Align(
               alignment: Alignment.center,
-              child: 
-              userProvider.user.photoUrl == null ?
-                     Text(
-                      // Utils.getInitials(userProvider.user.displayName),
-                      "${Utils.getInitials(userProvider.user.displayName)}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: UniversalVariables.lightBlueColor,
-                        fontSize: 14,
-                      ),
-                    )
-                  : CachedImage(
-                      userProvider.getUser.profilePhoto,
-                      isRound: true,
-                      radius: 45,
-                    ),
+              child: CachedImage(
+                user.getUser.profilePhoto,
+                isRound: true,
+                radius: 45,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 7.0),

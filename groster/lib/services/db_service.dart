@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:groster/models/database_item.dart';
+import 'package:groster/models/masterNote.dart';
 import 'package:groster/models/note.dart';
 
 class DatabaseService<T extends DatabaseItem> {
@@ -26,6 +27,14 @@ class DatabaseService<T extends DatabaseItem> {
   Stream<List<T>> streamList(String uid) {
     print("Uid From StreamList is $uid");
     var ref = _db.collection(collection).where("user_id",isEqualTo:uid );
+
+    return ref.snapshots().map((list) =>
+        list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
+  }
+
+  Stream<List<T>> streamMasterList(String fuid) {
+    print("Uid From StreamList is $fuid");
+    var ref = _db.collection(collection).where("user_id",isEqualTo:fuid );
 
     return ref.snapshots().map((list) =>
         list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
@@ -119,5 +128,5 @@ class QueryArgs {
 DatabaseService<Note> personalnotesDb = DatabaseService<Note>("personal_notes",
     fromDS: (id, data) => Note.fromDS(id, data), toMap: (note) => note.toMap());
 
-DatabaseService<Note> masternotesDb = DatabaseService<Note>("master_notes",
-    fromDS: (id, data) => Note.fromDS(id, data), toMap: (note) => note.toMap());
+DatabaseService<MasterNote> masternotesDb = DatabaseService<MasterNote>("master_notes",
+    fromDS: (id, data) => MasterNote.fromDS(id, data), toMap: (masternote) => masternote.toMap()); 

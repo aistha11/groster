@@ -122,7 +122,7 @@ class UserRepository with ChangeNotifier {
         uid: newUser.uid,
         email: newUser.email,
         name: name,
-        profilePhoto: newUser.photoUrl,
+        profilePhoto: "https://fertilitynetworkuk.org/wp-content/uploads/2017/01/Facebook-no-profile-picture-icon-620x389.jpg",
         username: username);
 
     Firestore.instance

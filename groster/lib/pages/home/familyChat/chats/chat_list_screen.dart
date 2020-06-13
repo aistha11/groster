@@ -9,24 +9,13 @@ import 'package:groster/utils/universal_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// import 'widgets/new_chat_button.dart';
-// import 'widgets/user_circle.dart';
-
 class ChatListScreen extends StatelessWidget {
-  // CustomAppBar customAppBar(BuildContext context) {
-  //   // final UserProvider userProvider = Provider.of<UserProvider>(context);
-  //   return CustomAppBar(
-  //     leading: UserCircle(),
-  //     title: Text('Chat'),
-  //     centerTitle: false,
-  //   );
-  // }
+  
 
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
         backgroundColor: UniversalVariables.scfBgColor,
-        // appBar: customAppBar(context),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.search),
           onPressed: () {
@@ -48,7 +37,7 @@ class ChatListContainer extends StatelessWidget {
     return Container(
       child: StreamBuilder<QuerySnapshot>(
           stream: _chatMethods.fetchContacts(
-            userId: userProvider.getUser.uid,
+            userId: userProvider.user.uid,
           ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {

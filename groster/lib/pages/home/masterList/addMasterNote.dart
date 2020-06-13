@@ -1,12 +1,11 @@
-import 'package:groster/models/note.dart';
-// import 'package:groster/provider/user_provider.dart';
+import 'package:groster/models/masterNote.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/services/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddMasterNote extends StatefulWidget {
-  final Note note;
+  final MasterNote note;
 
   const AddMasterNote({Key key, this.note}) : super(key: key);
   @override
@@ -63,7 +62,7 @@ class _AddMasterNoteState extends State<AddMasterNote> {
                         ));
                         return;
                       }
-                      Note note = Note(
+                      MasterNote note = MasterNote(
                         id: _editMode ? widget.note.id : null,
                         title: _titleController.text,
                         createdAt: DateTime.now(),

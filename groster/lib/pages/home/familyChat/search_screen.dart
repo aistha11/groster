@@ -34,12 +34,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   searchAppBar(BuildContext context) {
     return AppBar(
-      // gradient: LinearGradient(
-      //   colors: [
-      //     UniversalVariables.gradientColorStart,
-      //     UniversalVariables.gradientColorEnd,
-      //   ],
-      // ),
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => Navigator.pop(context),
@@ -53,7 +47,7 @@ class _SearchScreenState extends State<SearchScreen> {
           color: UniversalVariables.scfBgColor,
           child: TextField(
             controller: searchController,
-            onChanged: (val) {
+            onSubmitted: (val) {
               setState(() {
                 query = val;
               });
