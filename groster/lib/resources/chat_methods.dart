@@ -118,7 +118,7 @@ class ChatMethods {
   Stream<QuerySnapshot> fetchContacts({String userId}) => _userCollection
       .document(userId)
       .collection(CONTACTS_COLLECTION)
-      .snapshots();
+      .snapshots(); 
 
   Stream<QuerySnapshot> fetchLastMessageBetween({
     @required String senderId,

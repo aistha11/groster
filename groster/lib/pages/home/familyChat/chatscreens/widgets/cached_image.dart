@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
 
 class CachedImage extends StatelessWidget {
   final String imageUrl;
@@ -33,9 +34,7 @@ class CachedImage extends StatelessWidget {
           child: CachedNetworkImage(
               imageUrl: imageUrl,
               fit: fit,
-              placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(),
-                  ),
+              placeholder: (context, url) => MyShimmer.userCircle(radius),
               errorWidget: (context, url, error) {
                 return SizedBox(
                   height: isRound ? radius : height,

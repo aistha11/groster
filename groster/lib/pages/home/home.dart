@@ -19,7 +19,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   PageController pageController;
   int _page = 0;
-  UserRepository userProvider;
+  UserRepository userRepository;
 
   final UserRepository _authMethods = UserRepository.instance();
 
@@ -28,11 +28,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     super.initState();
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      userProvider = Provider.of<UserRepository>(context, listen: false);
-      await userProvider.refreshUser();
+      userRepository = Provider.of<UserRepository>(context, listen: false);
+      await userRepository.refreshUser();
 
       _authMethods.setUserState(
-        userId: userProvider.user.uid,
+        userId: userRepository.user.uid,
         userState: UserState.Online,
       );
     });
@@ -52,8 +52,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     String currentUserId =
-        (userProvider != null && userProvider.getUser != null)
-            ? userProvider.getUser.uid
+        (userRepository != null && userRepository.getUser != null)
+            ? userRepository.getUser.uid
             : "";
 
     super.didChangeAppLifecycleState(state);
@@ -105,12 +105,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       return Text('Chat');
   }
 
-  final List<PopupMenuItem<String>> _popUpMenuItems = [
-    PopupMenuItem(
-      child: Text("Logout"),
-      value: "Logout",
-    )
-  ];
+  // final List<PopupMenuItem<String>> _popUpMenuItems = [
+  //   PopupMenuItem(
+  //     child: Text("Logout"),
+  //     value: "Logout",
+  //   )
+  // ];
 
   CustomAppBar customAppBar(BuildContext context) {
     // final UserRepository userProvider = Provider.of<UserRepository>(context);
@@ -125,14 +125,14 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             Navigator.of(context).pushNamed("/ourFamily");
           },
         ),
-        PopupMenuButton<String>(
-          itemBuilder: (_) => _popUpMenuItems,
-          onSelected: (String value){
-            if(value == "Logout"){
-              _authMethods.signOut();
-            }
-          },
-        ),
+        // PopupMenuButton<String>(
+        //   itemBuilder: (_) => _popUpMenuItems,
+        //   onSelected: (String value){
+        //     if(value == "Logout"){
+        //       _authMethods.signOut();
+        //     }
+        //   },
+        // ),
       ],
     );
   }
@@ -190,7 +190,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               color: (_page == 2) ? Colors.lightBlue : Colors.grey,
             ),
             title: Text(
-              'Family Chat',
+              'Chat',
               style: TextStyle(
                 color: (_page == 2) ? Colors.lightBlue : Colors.grey,
               ),

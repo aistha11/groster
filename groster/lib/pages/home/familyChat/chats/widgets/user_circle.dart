@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 class UserCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    UserRepository user = Provider.of<UserRepository>(context) ?? null;
+    UserRepository user = Provider.of<UserRepository>(context);
+    user.refreshUser();
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed("/profile");

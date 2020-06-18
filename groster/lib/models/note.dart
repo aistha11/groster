@@ -7,7 +7,7 @@ class Note extends DatabaseItem{
   final String userId;
 
   Note({this.title, this.id, this.createdAt, this.userId}):super(id);
-
+ 
   Note.fromDS(String id, Map<String,dynamic> data):
     id=id,
     title=data['title'],

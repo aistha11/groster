@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:groster/models/contact.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/contact_view.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/quiet_box.dart';
+import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
 // import 'package:groster/provider/user_provider.dart';
 import 'package:groster/resources/chat_methods.dart';
 import 'package:groster/resources/user_repository.dart';
@@ -41,7 +42,7 @@ class ChatListContainer extends StatelessWidget {
           ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              var docList = snapshot.data.documents;
+              var docList = snapshot.data.documents; 
 
               if (docList.isEmpty) {
                 return QuietBox(
@@ -62,7 +63,7 @@ class ChatListContainer extends StatelessWidget {
               );
             }
 
-            return Center(child: CircularProgressIndicator());
+            return MyShimmer.shimChatTile();
           }),
     );
   }

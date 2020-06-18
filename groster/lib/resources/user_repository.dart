@@ -45,6 +45,12 @@ class UserRepository with ChangeNotifier {
     }
   }
 
+   Future<void> refreshUser() async {
+    User ruser = await getUserDetails();
+    _fuser = ruser;
+    notifyListeners();
+  }
+
   Future<User> getUserDetails() async {
     try {
       FirebaseUser currentUser = await getCurrentUser();
@@ -81,16 +87,13 @@ class UserRepository with ChangeNotifier {
   Stream<DocumentSnapshot> getUserStream({@required String uid}) =>
       _userCollection.document(uid).snapshots();
 
-  Future<void> refreshUser() async {
-    User user = await getUserDetails();
-    _fuser = user;
-    notifyListeners();
-  }
+ 
 
-  Future<bool> authenticateUser(FirebaseUser user) async {
+  Future<bool> authenticateUser(FirebaseUser nuser) async {
     QuerySnapshot result = await firestore
         .collection(USERS_COLLECTION)
-        .where(EMAIL_FIELD, isEqualTo: user.email)
+        .where(EMAIL_FIELD, isEqualTo: nuser.email)
+        .where("uid",isEqualTo: nuser.uid)
         .getDocuments();
 
     final List<DocumentSnapshot> docs = result.documents;
@@ -115,14 +118,35 @@ class UserRepository with ChangeNotifier {
         .setData(user.toMap(user));
   }
 
+  Future<bool> updateFamily(String familyId)async{
+    print(familyId);
+    try{
+      User upuser = User(
+      uid: getUser.uid,
+      email: getUser.email,
+      name: getUser.name,
+      profilePhoto: getUser.profilePhoto,
+      username: getUser.username,
+      // familyName: familyName,
+      familyId: familyId,
+    );
+    firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upuser.toMap(upuser));
+    notifyListeners();
+    return true;
+    }catch(e){
+      return false;
+    }
+  }
+
   Future<void> addDataToFdb(FirebaseUser newUser, String name) async {
     String username = Utils.getUsername(newUser.email);
+
 
     User user = User(
         uid: newUser.uid,
         email: newUser.email,
         name: name,
-        profilePhoto: "https://fertilitynetworkuk.org/wp-content/uploads/2017/01/Facebook-no-profile-picture-icon-620x389.jpg",
+        profilePhoto: BLANK_IMAGE, 
         username: username);
 
     Firestore.instance
@@ -184,7 +208,8 @@ class UserRepository with ChangeNotifier {
       await _auth.signInWithCredential(credential).then((value){
         if(value.user != null){
              authenticateUser(value.user).then((isNewUser){
-               addDataToDb(value.user);
+               if(isNewUser)
+                  addDataToDb(value.user);
              });
            }
       });
@@ -287,12 +312,15 @@ class UserRepository with ChangeNotifier {
     return userList;
   }
 
-  Future<void> signOut() async {
+  
+
+  Future<void> signOut({context}) async {
     try {
       setUserState(userId: user.uid, userState: UserState.Offline);
       _auth.signOut();
       _googleSignIn.signOut();
       _status = Status.Unauthenticated;
+      Navigator.pop(context);
       notifyListeners();
       return Future.delayed(Duration.zero);
     } catch (e) {
@@ -308,6 +336,7 @@ class UserRepository with ChangeNotifier {
       _status = Status.Unauthenticated;
     } else {
       _user = firebaseUser;
+      await refreshUser();
       _status = Status.Authenticated;
     }
     notifyListeners();

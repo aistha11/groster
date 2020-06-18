@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:groster/constants/strings.dart';
 import 'package:groster/models/database_item.dart';
+import 'package:groster/models/groupMsg.dart';
 import 'package:groster/models/masterNote.dart';
 import 'package:groster/models/note.dart';
 
@@ -25,16 +27,21 @@ class DatabaseService<T extends DatabaseItem> {
   }
 
   Stream<List<T>> streamList(String uid) {
-    print("Uid From StreamList is $uid");
-    var ref = _db.collection(collection).where("user_id",isEqualTo:uid );
+    var ref = _db.collection(collection).where("user_id", isEqualTo: uid).orderBy("created_at",descending: true);
 
     return ref.snapshots().map((list) =>
         list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
   }
 
   Stream<List<T>> streamMasterList(String fuid) {
-    print("Uid From StreamList is $fuid");
-    var ref = _db.collection(collection).where("user_id",isEqualTo:fuid );
+    var ref = _db.collection(collection).where("family_id", isEqualTo: fuid).orderBy("created_at",descending: true);
+
+    return ref.snapshots().map((list) =>
+        list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
+  }
+
+  Stream<List<T>> streamGroupMessages(String guid) {
+    var ref = _db.collection(collection).where("groupId", isEqualTo: guid).orderBy("timestamp",descending: true);
 
     return ref.snapshots().map((list) =>
         list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
@@ -106,6 +113,14 @@ class DatabaseService<T extends DatabaseItem> {
     }
   }
 
+  Future<dynamic> createMasterItem(T item, {String id}) {
+    if (id != null) {
+      return _db.collection(collection).document(id).setData(toMap(item));
+    } else {
+      return _db.collection(collection).add(toMap(item));
+    }
+  }
+
   Future<void> updateItem(T item) {
     return _db
         .collection(collection)
@@ -125,8 +140,15 @@ class QueryArgs {
   QueryArgs(this.key, this.value);
 }
 
-DatabaseService<Note> personalnotesDb = DatabaseService<Note>("personal_notes",
+DatabaseService<Note> personalnotesDb = DatabaseService<Note>(PERSONAL_COLLECTION,
     fromDS: (id, data) => Note.fromDS(id, data), toMap: (note) => note.toMap());
 
-DatabaseService<MasterNote> masternotesDb = DatabaseService<MasterNote>("master_notes",
-    fromDS: (id, data) => MasterNote.fromDS(id, data), toMap: (masternote) => masternote.toMap()); 
+DatabaseService<MasterNote> masternotesDb = DatabaseService<MasterNote>(
+    MASTER_COLLECTION,
+    fromDS: (id, data) => MasterNote.fromDS(id, data),
+    toMap: (masternote) => masternote.toMap()); 
+
+DatabaseService<GroupMessage> grpMsgDb = DatabaseService<GroupMessage>(
+    GROUP_MESSAGES,
+    fromDS: (id, data) => GroupMessage.fromDS(id, data),
+    toMap: (masternote) => masternote.toMap()); 

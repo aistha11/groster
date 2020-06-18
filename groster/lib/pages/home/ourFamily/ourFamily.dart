@@ -1,156 +1,231 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:groster/models/contact.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:groster/constants/strings.dart';
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/quiet_box.dart';
-import 'package:groster/pages/home/familyChat/chatscreens/chat_screen.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
-import 'package:groster/resources/chat_methods.dart';
+import 'package:groster/pages/home/ourFamily/famMembers.dart';
+import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/resources/user_repository.dart';
+import 'package:groster/utils/func.dart';
+import 'package:groster/utils/universal_variables.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class OurFamily extends StatefulWidget {
-  @override
-  _OurFamilyState createState() => _OurFamilyState();
-}
-
-class _OurFamilyState extends State<OurFamily> {
+class OurFamily extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final UserRepository userRepository = Provider.of<UserRepository>(context);
+    userRepository.refreshUser();
+    final User user = userRepository.getUser;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Our Family"),
+      backgroundColor: UniversalVariables.blackColor,
+      appBar: CustomAppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          icon: Icon(
+            Icons.clear,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
         ),
+        centerTitle: true,
+        appCol: UniversalVariables.blackColor,
+        title: Text("Family Profile"),
       ),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 2.0,
-          ),
-          ScrollUsers(),
-          SizedBox(
-            height: 130.0,
-          ),
-          FamilyBody(),
-        ],
-      ),
-    );
-  }
-}
-
-class ScrollUsers extends StatelessWidget {
-  final ChatMethods _chatMethods = ChatMethods();
-  final UserRepository _authMethods = UserRepository.instance();
-  @override
-  Widget build(BuildContext context) {
-    final UserRepository userProvider = Provider.of<UserRepository>(context);
-    return Container(
-      height: 70.0,
-      color: Colors.grey,
-      child: StreamBuilder<QuerySnapshot>(
-          stream: _chatMethods.fetchContacts(
-            userId: userProvider.getUser.uid,
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var docList = snapshot.data.documents;
-
-              if (docList.isEmpty) {
-                return QuietBox(
-                  title: "This is where all your family members are listed",
-                  subtitle: "Search for your family members to chat with them",
-                  buttonText: "START SEARCHING",
-                  navRoute: "/search_screen",
-                );
-              }
-              return ListView.separated(
-                separatorBuilder: (_,i){
-                  return SizedBox(
-                    width: 5.0,
-                  );
-                },
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.all(10),
-                itemCount: docList.length,
-                itemBuilder: (context, index) {
-                  Contact contact = Contact.fromMap(docList[index].data);
-
-                  return FutureBuilder<User>(
-                    future: _authMethods.getUserDetailsById(contact.uid),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        User user = snapshot.data;
-
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatScreen(
-                                    receiver: user,
-                                  ),
-                                ));
-                          },
-                          child: CachedImage(
-                            user.profilePhoto,
-                            radius: 50,
-                            isRound: true,
+      body: user.familyId == null
+          ? Container(
+              child: QuietBox(
+                  title: "Set Up Your Family Profile",
+                  subtitle: "After this you can add the family list",
+                  buttonText: "SetUp Now",
+                  navRoute: "/setUpFamily"),
+            )
+          : Container(
+              margin: EdgeInsets.only(top: 5),
+              child: ListView(
+                children: <Widget>[
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        child: Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushReplacementNamed("/familyGroupChat");
+                            },
+                            child: Container(
+                              width: 70,
+                              height: 70,
+                              // color: Colors.green,
+                              child: Stack(
+                                overflow: Overflow.clip,
+                                alignment: Alignment.topRight,
+                                children: [
+                                  Align(
+                                      alignment: Alignment.topRight,
+                                      child: CachedImage(
+                                        BLANK_IMAGE,
+                                        isRound: true,
+                                        radius: 45.0,
+                                      )),
+                                  Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: CachedImage(
+                                        userRepository.getUser.profilePhoto,
+                                        isRound: true,
+                                        radius: 45.0,
+                                      )),
+                                ],
+                              ),
+                            ),
                           ),
-                        );
-                      }
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  );
-                },
-              );
-            }
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Family Group",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  FamilyMembers(),
+                  Divider(
+                    height: 10,
+                    color: UniversalVariables.separatorColor,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        ListTile(
+                          leading: Text(
+                            "Id : ",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18.0),
+                          ),
+                          title: Row(
+                            children: [
+                              Text(
+                                user.familyId,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.content_copy,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    final data =
+                                        ClipboardData(text: user.familyId);
+                                    Clipboard.setData(data);
+                                    Fluttertoast.showToast(
+                                        msg: "Id copied to clipboard",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1);
+                                  }),
+                            ],
+                          ),
+                          contentPadding: EdgeInsets.only(left: 70.0),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.edit, color: Colors.white),
+                          title: Text(
+                            "Edit",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          contentPadding: EdgeInsets.only(left: 70.0),
+                          onTap: () {
+                            TextEditingController _familyId =
+                                TextEditingController();
+                            showDialog(
+                              context: context,
+                              child: Container(
+                                child: TextFormField(
+                                  validator: (val) {
+                                    if (val.isEmpty)
+                                      return "*This can't be empty.";
+                                    return null;
+                                  },
+                                  controller: _familyId,
+                                  textInputAction: TextInputAction.done,
+                                  decoration: InputDecoration(
+                                    // prefixIcon: Icon(Icons.person),
+                                    labelText: "Family Id",
+                                    hintText: 'Family Id',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            );
+                            // Navigator.of(context).pushNamed("/setUpFamily");
+                          },
+                        ),
 
-            return Center(child: CircularProgressIndicator());
-          }),
-    );
-  }
-}
-
-class FamilyBody extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // color: Colors.grey,
-      margin: EdgeInsets.only(left: 45.0),
-      child: Center(
-        child: Column(
-          children: [
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text("Family Settings"),
-              onTap: (){
-                //Go to settings
-              },
+                        ListTile(
+                          leading: Icon(
+                            Icons.share,
+                            color: Colors.white,
+                          ),
+                          title: Text(
+                            "Share",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          contentPadding: EdgeInsets.only(left: 70.0),
+                          onTap: () {
+                            Func.share(
+                              context,
+                              "Our Family Id is ${user.familyId}",
+                              "Join Family",
+                            );
+                          },
+                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 55.0),
+                        //   child: ExpansionTile(
+                        //     // backgroundColor: Colors.white,
+                        //     leading: Icon(
+                        //       FontAwesomeIcons.peopleArrows,
+                        //       color: Colors.white,
+                        //     ),
+                        //     title: Text(
+                        //       "Members",
+                        //       style: TextStyle(color: Colors.white),
+                        //     ),
+                        //     initiallyExpanded: false,
+                        //     childrenPadding: EdgeInsets.only(left: 60),
+                        //     children: [
+                        //       Container(
+                        //         child: Column(children: [
+                        //           ListTile(
+                        //             title: Text("Hello"),
+                        //           ),
+                        //         ],),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-            ListTile(
-              leading: Icon(Icons.trip_origin),
-              title: Text("Plan a Trip"),
-              onTap: (){
-                //Plan a trip
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.share),
-              title: Text("Share with Friends"),
-              onTap: (){
-                //Share
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:groster/models/note.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/quiet_box.dart';
 import 'package:groster/pages/home/personalList/addPersonalNote.dart';
 import 'package:groster/pages/widgets/notesItem.dart';
+import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
 // import 'package:groster/provider/user_provider.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/services/db_service.dart';
@@ -12,8 +13,8 @@ class PersonalList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserRepository userProvider = Provider.of<UserRepository>(context);
+    userProvider.refreshUser();
     var uid = userProvider.user.uid;
-    print("Uid from UserRepository for personal list is $uid");
     return Scaffold(
       body: StreamBuilder(
         stream: personalnotesDb.streamList(uid),
@@ -34,8 +35,11 @@ class PersonalList extends StatelessWidget {
                 navRoute: "/addPersonalNote",
               );
             }
-            return ListView.builder(
+            return ListView.separated(
               itemCount: snapshot.data.length,
+              separatorBuilder: (_, i) {
+                return i.isEven ? Divider(color: Colors.blue,) : Divider(color: Colors.blueAccent,);
+              },
               itemBuilder: (context, index) {
                 return NoteItem(
                   note: snapshot.data[index],
@@ -83,7 +87,7 @@ class PersonalList extends StatelessWidget {
             );
           }
 
-          return Center(child: CircularProgressIndicator());
+          return MyShimmer.shimCont(double.infinity);
         },
       ),
       floatingActionButton: FloatingActionButton(

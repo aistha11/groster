@@ -6,6 +6,7 @@ import 'package:groster/pages/home/familyChat/chats/widgets/online_dot_indicator
 import 'package:groster/pages/home/familyChat/chatscreens/chat_screen.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/widgets/custom_tile.dart';
+import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
 import 'package:groster/resources/chat_methods.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
@@ -31,9 +32,7 @@ class ContactView extends StatelessWidget {
             contact: user,
           );
         }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        return MyShimmer.shimChatTile();
       },
     );
   }

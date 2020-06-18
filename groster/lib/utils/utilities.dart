@@ -20,10 +20,20 @@ class Utils {
     String lastNameInitial = nameSplit[1][0];
     return firstNameInitial + lastNameInitial;
     }else{
-      String blankName = "NS";
-      return blankName;
+      return "NS";
     }
     
+  }
+
+  static String getFirstName(String name){
+    List<String> nameSplit = name.split(" ");
+    String firstName = nameSplit[0];
+    return firstName;
+  }
+  static String getLastName(String name){
+    List<String> nameSplit = name.split(" ");
+    String lastName = nameSplit[1];
+    return lastName;
   }
 
   // this is new

@@ -13,7 +13,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final UserRepository _authMethods = UserRepository.instance();
+  final UserRepository _userRepository = UserRepository.instance();
 
   List<User> userList;
   String query = "";
@@ -23,8 +23,8 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
 
-    _authMethods.getCurrentUser().then((FirebaseUser user) {
-      _authMethods.fetchAllUsers(user).then((List<User> list) {
+    _userRepository.getCurrentUser().then((FirebaseUser user) {
+      _userRepository.fetchAllUsers(user).then((List<User> list) {
         setState(() {
           userList = list;
         });
@@ -43,7 +43,8 @@ class _SearchScreenState extends State<SearchScreen> {
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight + 15),
         child: Container(
-          padding: EdgeInsets.only(left:20 , top: 10.0, right: 20.0, bottom: 10.0),
+          padding:
+              EdgeInsets.only(left: 20, top: 10.0, right: 20.0, bottom: 10.0),
           color: UniversalVariables.scfBgColor,
           child: TextField(
             controller: searchController,
@@ -60,22 +61,28 @@ class _SearchScreenState extends State<SearchScreen> {
               fontSize: 19,
             ),
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search, color: Colors.black38,),
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.black38,
+              ),
               contentPadding: EdgeInsets.all(5),
               filled: true,
               fillColor: Colors.white38,
               suffixIcon: IconButton(
                 icon: Icon(Icons.close, color: Colors.white),
                 onPressed: () {
-                  WidgetsBinding.instance
+                  setState(() {
+                    WidgetsBinding.instance
                       .addPostFrameCallback((_) => searchController.clear());
+                      query = "";
+                  });
                 },
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.all(Radius.circular(40)),
               ),
-              hintText: "@username",
+              hintText: "enter email address",
               hintStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 19,
@@ -93,18 +100,34 @@ class _SearchScreenState extends State<SearchScreen> {
         ? []
         : userList != null
             ? userList.where((User user) {
-                String _getUsername = user.username.toLowerCase();
+                //Search By UserName or Name 
+                // String _getUsername = user.username.toLowerCase();
+                // String _getName = user.name.toLowerCase();
+                // bool matchesUsername = _getUsername.contains(_query);
+                // bool matchesName = _getName.contains(_query);
+                String _getEmail = user.email.toLowerCase();
                 String _query = query.toLowerCase();
-                String _getName = user.name.toLowerCase();
-                bool matchesUsername = _getUsername.contains(_query);
-                bool matchesName = _getName.contains(_query);
-
-                return (matchesUsername || matchesName);
-
-                // (User user) => (user.username.toLowerCase().contains(query.toLowerCase()) ||
-                //     (user.name.toLowerCase().contains(query.toLowerCase()))),
+                bool matchesEmail = _getEmail == _query ? true : false;
+                // return (matchesUsername || matchesName);
+                return (matchesEmail);
               }).toList()
             : [];
+
+    if (suggestionList.isEmpty) {
+      if (query.isNotEmpty) {
+        return Container(
+          child: Center(
+            child: Text("Sorry! Searched User Not Found"),
+          ),
+        );
+      } else {
+        return Container(
+          child: Center(
+            child: Text("Search User"),
+          ),
+        );
+      }
+    }
 
     return ListView.builder(
       itemCount: suggestionList.length,
@@ -147,13 +170,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        backgroundColor: UniversalVariables.scfBgColor,
-        appBar: searchAppBar(context),
-        body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: buildSuggestions(query),
-        ),
-      );
+    return Scaffold(
+      backgroundColor: UniversalVariables.scfBgColor,
+      appBar: searchAppBar(context),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: buildSuggestions(query),
+      ),
+    );
   }
 }

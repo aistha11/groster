@@ -65,6 +65,7 @@ class _AddMasterNoteState extends State<AddMasterNote> {
                       MasterNote note = MasterNote(
                         id: _editMode ? widget.note.id : null,
                         title: _titleController.text,
+                        familyId: Provider.of<UserRepository>(context,listen: false).getUser.familyId,
                         createdAt: DateTime.now(),
                         userId:
                             Provider.of<UserRepository>(context, listen: false)
@@ -74,7 +75,7 @@ class _AddMasterNoteState extends State<AddMasterNote> {
                       if (_editMode) {
                         await masternotesDb.updateItem(note);
                       } else {
-                        await masternotesDb.createItem(note);
+                        await masternotesDb.createMasterItem(note);
                       }
                       Navigator.pop(context);
                     },

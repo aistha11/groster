@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:groster/enum/auth_state.dart';
 import 'package:groster/resources/user_repository.dart';
+import 'package:groster/utils/func.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -179,6 +180,7 @@ class _SignInState extends State<SignIn> {
   TextEditingController _email;
   TextEditingController _password;
   bool _obscure;
+  FocusNode textFieldFocus = FocusNode();
 
   @override
   void initState() {
@@ -277,6 +279,7 @@ class _SignInState extends State<SignIn> {
               textColor: Colors.white,
               child: Text("Login"),
               onPressed: () async {
+                Func.hideKeyboard(textFieldFocus);
                 if (_formKey.currentState.validate()) {
                   if (!await user.signIn(_email.text, _password.text))
                     showDialog(
@@ -307,6 +310,7 @@ class _SignUpState extends State<SignUp> {
   final FocusNode emailField = FocusNode();
   final FocusNode passwordField = FocusNode();
   final FocusNode confirmPasswordField = FocusNode();
+  FocusNode textFieldFocus = FocusNode();
   TextEditingController _fName;
   TextEditingController _lName;
   TextEditingController _email;
@@ -509,6 +513,7 @@ class _SignUpState extends State<SignUp> {
               textColor: Colors.white,
               child: Text("Create Account"),
               onPressed: () async {
+                Func.hideKeyboard(textFieldFocus);
                 if (_formKey.currentState.validate()) {
                   if (_confirmPassword.text == _password.text) {
                     String name = "${_fName.text} ${_lName.text}";

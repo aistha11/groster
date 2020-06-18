@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
 
 class Splash extends StatelessWidget {
   @override
@@ -6,7 +7,8 @@ class Splash extends StatelessWidget {
     return Scaffold(
       body: Container(
         child: Center(
-          child: CircularProgressIndicator(),
+          // child: MyShimmer.shimText("G R O S T E R",40.0),
+          child: MyShimmer.shimText(". . .",50.0),
         ),
       ),
     );

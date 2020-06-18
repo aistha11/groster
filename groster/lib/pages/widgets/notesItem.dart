@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:groster/models/note.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -43,7 +44,9 @@ class NoteItem extends StatelessWidget {
         ],
         child: ListTile(
           onTap: () => onTap(note),
+          leading: Icon(FontAwesomeIcons.longArrowAltRight),
           title: Text(note.title),
+          subtitle: Text(note.createdAt.toString(),style: TextStyle(fontSize: 11.0),),
         ),
       ),
     );

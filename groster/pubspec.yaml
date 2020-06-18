@@ -48,6 +48,9 @@ dependencies:
   unicorndial: ^1.1.5
   gradient_widgets:
   json_annotation:
+  share:
+  # firebase_dynamic_links:
+  fluttertoast:
 
 
   # The following adds the Cupertino Icons font to your application.
