@@ -21,16 +21,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ImageUploadProvider()),
         ChangeNotifierProvider(create: (_) => UserRepository.instance()),
-        // ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: "/",
-        theme: ThemeData(
-          // brightness: Brightness.dark,
-          primaryColor: Colors.indigoAccent,
-          primarySwatch: Colors.grey,
-        ),
         routes: {
           "/": (_) => Wrapper(),
           "/addPersonalNote": (_) => AddPersonalNote(),

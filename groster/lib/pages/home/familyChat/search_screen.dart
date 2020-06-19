@@ -34,6 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   searchAppBar(BuildContext context) {
     return AppBar(
+      backgroundColor: UniversalVariables.mainCol,
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => Navigator.pop(context),
@@ -45,7 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Container(
           padding:
               EdgeInsets.only(left: 20, top: 10.0, right: 20.0, bottom: 10.0),
-          color: UniversalVariables.scfBgColor,
+          color: Colors.grey[300],
           child: TextField(
             controller: searchController,
             onSubmitted: (val) {
@@ -63,13 +64,14 @@ class _SearchScreenState extends State<SearchScreen> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.search,
-                color: Colors.black38,
+                color: UniversalVariables.iconCol,
+                size: 30,
               ),
               contentPadding: EdgeInsets.all(5),
               filled: true,
-              fillColor: Colors.white38,
+              fillColor: Colors.white,
               suffixIcon: IconButton(
-                icon: Icon(Icons.close, color: Colors.white),
+                icon: Icon(Icons.close, color: UniversalVariables.iconCol),
                 onPressed: () {
                   setState(() {
                     WidgetsBinding.instance
@@ -171,7 +173,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: UniversalVariables.scfBgColor,
+      backgroundColor: UniversalVariables.backgroundCol,
       appBar: searchAppBar(context),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),

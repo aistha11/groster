@@ -7,6 +7,7 @@ import 'package:groster/pages/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:groster/resources/user_repository.dart';
+import 'package:groster/utils/universal_variables.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -96,13 +97,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     pageController.jumpToPage(page);
   }
 
-  Widget getTitle() {
+  String getTitleText() {
     if (_page == 0)
-      return Text('Master List');
+      return 'Master List';
     else if (_page == 1)
-      return Text('Personal List');
+      return 'Personal List';
     else
-      return Text('Chat');
+      return 'Chat';
   }
 
   // final List<PopupMenuItem<String>> _popUpMenuItems = [
@@ -113,14 +114,19 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   // ];
 
   CustomAppBar customAppBar(BuildContext context) {
-    // final UserRepository userProvider = Provider.of<UserRepository>(context);
     return CustomAppBar(
       leading: UserCircle(),
-      title: getTitle(),
+      title: Text(
+        getTitleText(),
+        style: TextStyle(color: Colors.black),
+      ),
       centerTitle: false,
       actions: [
         IconButton(
-          icon: Icon(Icons.people),
+          icon: Icon(
+            Icons.people,
+            color: Colors.black,
+          ),
           onPressed: () {
             Navigator.of(context).pushNamed("/ourFamily");
           },
@@ -141,12 +147,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(context),
-      // appBar: CustomAppBar(
-      //   leading: UserCircle(),
-      //   title: getTitle(),
-      //   centerTitle: false,
-      // ),
-      backgroundColor: Colors.grey[200],
+      backgroundColor: UniversalVariables.backgroundCol,
       body: PageView(
         children: [
           MasterList(),
@@ -163,36 +164,36 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.view_list,
-              color: (_page == 0) ? Colors.lightBlue : Colors.grey,
+              color: (_page == 0) ? UniversalVariables.mainCol : Colors.grey,
             ),
             title: Text(
               'Master List',
               style: TextStyle(
-                color: (_page == 0) ? Colors.lightBlue : Colors.grey,
+                color: (_page == 0) ? UniversalVariables.mainCol : Colors.grey,
               ),
             ),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.filter_list,
-              color: (_page == 1) ? Colors.lightBlue : Colors.grey,
+              color: (_page == 1) ? UniversalVariables.mainCol : Colors.grey,
             ),
             title: Text(
               'Personal List',
               style: TextStyle(
-                color: (_page == 1) ? Colors.lightBlue : Colors.grey,
+                color: (_page == 1) ? UniversalVariables.mainCol : Colors.grey,
               ),
             ),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.chat,
-              color: (_page == 2) ? Colors.lightBlue : Colors.grey,
+              color: (_page == 2) ? UniversalVariables.mainCol : Colors.grey,
             ),
             title: Text(
               'Chat',
               style: TextStyle(
-                color: (_page == 2) ? Colors.lightBlue : Colors.grey,
+                color: (_page == 2) ? UniversalVariables.mainCol : Colors.grey,
               ),
             ),
           ),

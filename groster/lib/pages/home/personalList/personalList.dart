@@ -7,6 +7,7 @@ import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/services/db_service.dart';
 import 'package:flutter/material.dart';
+import 'package:groster/utils/universal_variables.dart';
 import 'package:provider/provider.dart';
 
 class PersonalList extends StatelessWidget {
@@ -57,13 +58,6 @@ class PersonalList extends StatelessWidget {
                       personalnotesDb.removeItem(note.id);
                     }
                   },
-                  // onTap: (note) => Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //           builder: (_) => NoteDetailsPage(
-                  //             note: note,
-                  //           ),
-                  //         )),
                   onTap: (note) {
                     showDialog(
                       context: context,
@@ -91,7 +85,8 @@ class PersonalList extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        backgroundColor: UniversalVariables.secondCol,
+        child: Icon(Icons.add,color: UniversalVariables.backgroundCol,),
         onPressed: () {
           Navigator.pushNamed(context, "/addPersonalNote");
         },

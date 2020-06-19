@@ -19,7 +19,7 @@ class QuietBox extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 25),
         child: Container(
-          color: UniversalVariables.separatorColor,
+          color: UniversalVariables.mainCol,
           padding: EdgeInsets.symmetric(vertical: 35, horizontal: 25),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -45,7 +45,7 @@ class QuietBox extends StatelessWidget {
               ),
               SizedBox(height: 25),
               FlatButton(
-                color: UniversalVariables.lightBlueColor,
+                color: UniversalVariables.secondCol,
                 child: Text(buttonText),
                 onPressed: () => Navigator.of(context).pushNamed(navRoute),
               ),

@@ -21,24 +21,24 @@ class OurFamily extends StatelessWidget {
     final User user = userRepository.getUser;
 
     return Scaffold(
-      backgroundColor: UniversalVariables.blackColor,
+      backgroundColor: UniversalVariables.backgroundCol,
       appBar: CustomAppBar(
         leading: IconButton(
           icon: Icon(
             Icons.clear,
-            color: Colors.white,
+            color: Colors.black,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        appCol: UniversalVariables.blackColor,
-        title: Text("Family Profile"),
+        title: Text("Family Profile",style: TextStyle(color: Colors.black),),
       ),
       body: user.familyId == null
           ? Container(
               child: QuietBox(
                   title: "Set Up Your Family Profile",
-                  subtitle: "After this you can add the family list",
+                  subtitle:
+                      "After this you can add the family list & also group chat with your family",
                   buttonText: "SetUp Now",
                   navRoute: "/setUpFamily"),
             )
@@ -61,24 +61,35 @@ class OurFamily extends StatelessWidget {
                             child: Container(
                               width: 70,
                               height: 70,
-                              // color: Colors.green,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey,
+                              ),
                               child: Stack(
                                 overflow: Overflow.clip,
                                 alignment: Alignment.topRight,
                                 children: [
                                   Align(
                                       alignment: Alignment.topRight,
-                                      child: CachedImage(
-                                        BLANK_IMAGE,
-                                        isRound: true,
-                                        radius: 45.0,
+                                      child: Container(
+                                        padding:
+                                            EdgeInsets.only(top: 4, right: 4),
+                                        child: CachedImage(
+                                          BLANK_IMAGE,
+                                          isRound: true,
+                                          radius: 45.0,
+                                        ),
                                       )),
                                   Align(
                                       alignment: Alignment.bottomLeft,
-                                      child: CachedImage(
-                                        userRepository.getUser.profilePhoto,
-                                        isRound: true,
-                                        radius: 45.0,
+                                      child: Container(
+                                        padding:
+                                            EdgeInsets.only(bottom: 4, left: 4),
+                                        child: CachedImage(
+                                          userRepository.getUser.profilePhoto,
+                                          isRound: true,
+                                          radius: 45.0,
+                                        ),
                                       )),
                                 ],
                               ),
@@ -90,16 +101,18 @@ class OurFamily extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           "Family Group",
-                          style: TextStyle(color: Colors.white),
+                          // style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   FamilyMembers(),
                   Divider(
                     height: 10,
-                    color: UniversalVariables.separatorColor,
+                    color: UniversalVariables.secondCol,
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -111,14 +124,16 @@ class OurFamily extends StatelessWidget {
                         ListTile(
                           leading: Text(
                             "Id : ",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0),
+                            style: TextStyle(
+                              // color: Colors.white,
+                              fontSize: 18.0,
+                            ),
                           ),
                           title: Row(
                             children: [
                               Text(
                                 user.familyId,
-                                style: TextStyle(color: Colors.white),
+                                // style: TextStyle(color: Colors.white),
                               ),
                               SizedBox(
                                 width: 10.0,
@@ -126,65 +141,48 @@ class OurFamily extends StatelessWidget {
                               IconButton(
                                   icon: Icon(
                                     Icons.content_copy,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                   onPressed: () {
                                     final data =
                                         ClipboardData(text: user.familyId);
                                     Clipboard.setData(data);
                                     Fluttertoast.showToast(
-                                        msg: "Id copied to clipboard",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER,
-                                        timeInSecForIosWeb: 1);
+                                      msg: "Id copied to clipboard",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor:
+                                          UniversalVariables.mainCol,
+                                    );
                                   }),
                             ],
                           ),
                           contentPadding: EdgeInsets.only(left: 70.0),
                         ),
                         ListTile(
-                          leading: Icon(Icons.edit, color: Colors.white),
+                          leading: Icon(
+                            Icons.edit,
+                            // color: UniversalVariables.iconCol,
+                          ),
                           title: Text(
                             "Edit",
-                            style: TextStyle(color: Colors.white),
+                            // style: TextStyle(color: Colors.white),
                           ),
                           contentPadding: EdgeInsets.only(left: 70.0),
                           onTap: () {
-                            TextEditingController _familyId =
-                                TextEditingController();
-                            showDialog(
-                              context: context,
-                              child: Container(
-                                child: TextFormField(
-                                  validator: (val) {
-                                    if (val.isEmpty)
-                                      return "*This can't be empty.";
-                                    return null;
-                                  },
-                                  controller: _familyId,
-                                  textInputAction: TextInputAction.done,
-                                  decoration: InputDecoration(
-                                    // prefixIcon: Icon(Icons.person),
-                                    labelText: "Family Id",
-                                    hintText: 'Family Id',
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            );
-                            // Navigator.of(context).pushNamed("/setUpFamily");
+                            Navigator.of(context).pushNamed("/setUpFamily");
                           },
                         ),
 
                         ListTile(
                           leading: Icon(
                             Icons.share,
-                            color: Colors.white,
+                            // color: UniversalVariables.iconCol,
                           ),
                           title: Text(
                             "Share",
-                            style: TextStyle(color: Colors.white),
+                            // style: TextStyle(color: Colors.white),
                           ),
                           contentPadding: EdgeInsets.only(left: 70.0),
                           onTap: () {
@@ -195,31 +193,6 @@ class OurFamily extends StatelessWidget {
                             );
                           },
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 55.0),
-                        //   child: ExpansionTile(
-                        //     // backgroundColor: Colors.white,
-                        //     leading: Icon(
-                        //       FontAwesomeIcons.peopleArrows,
-                        //       color: Colors.white,
-                        //     ),
-                        //     title: Text(
-                        //       "Members",
-                        //       style: TextStyle(color: Colors.white),
-                        //     ),
-                        //     initiallyExpanded: false,
-                        //     childrenPadding: EdgeInsets.only(left: 60),
-                        //     children: [
-                        //       Container(
-                        //         child: Column(children: [
-                        //           ListTile(
-                        //             title: Text("Hello"),
-                        //           ),
-                        //         ],),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
                   )

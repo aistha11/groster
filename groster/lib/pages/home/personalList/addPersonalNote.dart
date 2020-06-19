@@ -4,6 +4,7 @@ import 'package:groster/models/note.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/services/db_service.dart';
 import 'package:flutter/material.dart';
+import 'package:groster/utils/universal_variables.dart';
 import 'package:provider/provider.dart';
 
 class AddPersonalNote extends StatefulWidget {
@@ -31,7 +32,9 @@ class _AddPersonalNoteState extends State<AddPersonalNote> {
   Widget build(BuildContext context){
     return Scaffold(
       key: _key,
+      backgroundColor: UniversalVariables.backgroundCol,
       appBar: AppBar(
+        backgroundColor: UniversalVariables.mainCol,
         leading: IconButton(
             icon: Icon(Icons.clear, size: 29.0, color: Colors.white),
             onPressed: () {
@@ -53,6 +56,7 @@ class _AddPersonalNoteState extends State<AddPersonalNote> {
             const SizedBox(height: 10.0),
             const SizedBox(height: 10.0),
             RaisedButton(
+              color: UniversalVariables.iconCol,
               child: _processing ? CircularProgressIndicator() : Text("Save"),
               onPressed: _processing ? null  : ()async {
                 setState(() {

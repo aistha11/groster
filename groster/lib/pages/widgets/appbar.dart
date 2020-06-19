@@ -6,7 +6,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget> actions;
   final Widget leading;
   final bool centerTitle;
-  final Color appCol;
+  // final Color appCol;
 
   const CustomAppBar({
     Key key,
@@ -14,27 +14,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.leading,
     @required this.centerTitle,
-    this.appCol,
+    // this.appCol,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: appCol == null ? UniversalVariables.appBarColor : appCol,
+        color: UniversalVariables.mainCol,
         border: Border(
           bottom: BorderSide(
-            color: appCol == null ? UniversalVariables.separatorColor : Colors.white,
+            color: UniversalVariables.separatorColor,
             width: 1.4,
             style: BorderStyle.solid,
           ),
         ),
       ),
       child: AppBar(
-        backgroundColor:
-            appCol == null ? UniversalVariables.appBarColor : appCol,
+        backgroundColor: UniversalVariables.mainCol,
         elevation: 0,
         leading: leading,
         actions: actions,

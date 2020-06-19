@@ -20,9 +20,13 @@ class UniversalVariables {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight);
   //For appBar
-  static final Color appBarColor = Colors.indigo;
+  static final Color mainCol = Color.fromRGBO(167, 245, 200,1.0);
   //For Scaffold Background
-  static final Color scfBgColor = Colors.grey[400];
+  static final Color backgroundCol = Colors.white;
+  //Icon, Save, Search
+  static final Color iconCol = Color.fromRGBO(239, 213, 96, 1.0);
+  //secondary color
+  static final Color secondCol = Color.fromRGBO(239, 213, 96, 1.0);
   //For UserTitle Color
   static final Color titCol = Colors.black;
   //For User last message color

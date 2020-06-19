@@ -1,9 +1,9 @@
-// import 'package:groster/enum/user_state.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:groster/constants/strings.dart';
 import 'package:groster/enum/user_state.dart';
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
+import 'package:groster/pages/home/profile/editProfile.dart';
 import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/func.dart';
@@ -19,18 +19,20 @@ class Profile extends StatelessWidget {
     final UserRepository userRepository = Provider.of<UserRepository>(context);
     final User user = userRepository.getUser;
     return Scaffold(
-      backgroundColor: UniversalVariables.blackColor,
+      backgroundColor: UniversalVariables.backgroundCol,
       appBar: CustomAppBar(
         leading: IconButton(
           icon: Icon(
             Icons.clear,
-            color: Colors.white,
+            color: Colors.black,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        appCol: UniversalVariables.blackColor,
-        title: Text("Profile"),
+        title: Text(
+          "Profile",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Container(
         margin: EdgeInsets.only(top: 25),
@@ -58,7 +60,7 @@ class Profile extends StatelessWidget {
                               Utils.getInitials(user.name),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: UniversalVariables.lightBlueColor,
+                                // color: UniversalVariables.lightBlueColor,
                                 fontSize: 20,
                               ),
                             ),
@@ -72,13 +74,16 @@ class Profile extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: Colors.white,
+                          // color: Colors.white,
                         ),
                       ),
                       SizedBox(height: 10),
                       Text(
                         user.email,
-                        style: TextStyle(fontSize: 14, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 14,
+                          // color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -86,14 +91,21 @@ class Profile extends StatelessWidget {
                     height: 60.0,
                   ),
                   ListTile(
-                    leading: Icon(Icons.edit, color: Colors.white,),
+                    leading: Icon(
+                      Icons.edit,
+                      // color: UniversalVariables.iconCol,
+                    ),
                     title: Text(
                       "Edit Profile",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          // color: Colors.white,
+                          ),
                     ),
                     contentPadding: EdgeInsets.only(left: 70.0),
                     onTap: () {
-                      Func.toImplement(context, "Go to profile Edit Page");
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                        return EditProfile(eUser: user);
+                      }));
                     },
                   ),
                   // ListTile(
@@ -127,35 +139,42 @@ class Profile extends StatelessWidget {
                   //   },
                   // ),
                   ListTile(
-                    leading: Icon(Icons.share, color: Colors.white,),
+                    leading: Icon(
+                      Icons.share,
+                      // color: UniversalVariables.iconCol,
+                    ),
                     title: Text(
                       "Share App",
-                      style: TextStyle(color: Colors.white),
+                      // style: TextStyle(
+                      //   color: Colors.white,
+                      // ),
                     ),
                     contentPadding: EdgeInsets.only(left: 70.0),
                     onTap: () {
                       Func.share(
                         context,
-                        "Hey, I am sharing this awesome app. Please install the app from $APP_URL",
-                        "Install Now",
+                        "Hey! I would like to share Groster, A Grocery List App. $APP_URL",
+                        "Install App",
                       );
                     },
                   ),
                   ListTile(
-                    leading: Icon(FontAwesomeIcons.signOutAlt, color: Colors.white,),
+                    leading: Icon(
+                      FontAwesomeIcons.signOutAlt,
+                      // color: UniversalVariables.iconCol,
+                    ),
                     title: Text(
                       "Log Out",
-                      style: TextStyle(color: Colors.white),
+                      // style: TextStyle(color: Colors.white),
                     ),
                     contentPadding: EdgeInsets.only(left: 70.0),
                     onTap: () async {
-
-                       _userRepository.setUserState(
-                          userId: userRepository.getUser.uid,
-                          userState: UserState.Offline,
-                       );
+                      _userRepository.setUserState(
+                        userId: userRepository.getUser.uid,
+                        userState: UserState.Offline,
+                      );
                       // Navigator.of(context).pop();
-                       await _userRepository.signOut(context: context);
+                      await _userRepository.signOut(context: context);
                     },
                   ),
                 ],

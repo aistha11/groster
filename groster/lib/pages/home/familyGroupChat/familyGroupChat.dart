@@ -7,6 +7,7 @@ import 'package:groster/models/groupMsg.dart';
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/widgets/appbar.dart';
+import 'package:groster/pages/widgets/previewImage.dart';
 import 'package:groster/provider/image_upload_provider.dart';
 import 'package:groster/resources/storage_methods.dart';
 import 'package:groster/resources/user_repository.dart';
@@ -37,16 +38,17 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
   @override
   Widget build(BuildContext context) {
     _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
-     _userRepository = Provider.of<UserRepository>(context);
+    _userRepository = Provider.of<UserRepository>(context);
     _userRepository.refreshUser();
     sender = _userRepository.getUser;
     _currentUserId = _userRepository.getUser.uid;
     return Scaffold(
-      backgroundColor: UniversalVariables.scfBgColor,
+      backgroundColor: UniversalVariables.backgroundCol,
       appBar: CustomAppBar(
         leading: IconButton(
           icon: Icon(
-            Icons.home,
+            Icons.arrow_back,
+            color: Colors.black,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -82,7 +84,8 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
               child: Text(
-                sender.familyId,
+                sender.familyName,
+                style: TextStyle(color: Colors.black),
               ),
             ),
           ],
@@ -162,6 +165,7 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
       ),
     );
   }
+
   getMessage(GroupMessage message) {
     return message.type != MESSAGE_TYPE_IMAGE
         ? Text(
@@ -172,14 +176,22 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
             ),
           )
         : message.photoUrl != null
-            ? CachedImage(
-                message.photoUrl,
-                height: 250,
-                width: 250,
-                radius: 10,
+            ? GestureDetector(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                  return PreviewImage(imgUrl: message.photoUrl,);
+                }));
+              },
+                child: CachedImage(
+                  message.photoUrl,
+                  height: 250,
+                  width: 250,
+                  radius: 10,
+                ),
               )
             : Text("Url was null");
   }
+
   Widget receiverLayout(GroupMessage message) {
     Radius messageRadius = Radius.circular(10);
     return Container(
@@ -225,6 +237,7 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
       textFieldController.text = "";
       grpMsgDb.createItem(_grpMessage);
     }
+
     return Container(
       padding: EdgeInsets.all(10),
       child: Row(
@@ -234,7 +247,7 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
               ? GestureDetector(
                   child: Icon(
                     Icons.keyboard_arrow_right,
-                    color: UniversalVariables.appBarColor,
+                    color: UniversalVariables.mainCol,
                     size: 30.0,
                   ),
                   onTap: () {
@@ -330,4 +343,3 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
           imageUploadProvider: _imageUploadProvider);
   }
 }
-

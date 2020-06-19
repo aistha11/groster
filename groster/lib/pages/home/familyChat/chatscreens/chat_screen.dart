@@ -68,19 +68,31 @@ class _ChatScreenState extends State<ChatScreen> {
     _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
 
     return Scaffold(
-      backgroundColor: UniversalVariables.scfBgColor,
+      backgroundColor: UniversalVariables.backgroundCol,
       appBar: CustomAppBar(
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
+            color: Colors.black,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         centerTitle: false,
-        title: Text(
-          widget.receiver.name,
+        title: Row(
+          children: [
+            CachedImage(widget.receiver.profilePhoto, isRound: true, radius: 35.0,),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: Text(
+                widget.receiver.name,
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
         ),
         actions: <Widget>[],
       ),
@@ -254,7 +266,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           //Show an arrow to show add image option
           isWriting ? GestureDetector(
-                  child: Icon(Icons.keyboard_arrow_right,color: UniversalVariables.appBarColor, size: 30.0,),
+                  child: Icon(Icons.keyboard_arrow_right,color: UniversalVariables.mainCol, size: 30.0,),
                   onTap: (){
                     setState(() {
                       isWriting = false;

@@ -118,8 +118,7 @@ class UserRepository with ChangeNotifier {
         .setData(user.toMap(user));
   }
 
-  Future<bool> updateFamily(String familyId)async{
-    print(familyId);
+  Future<bool> updateFamily(String familyName, String familyId)async{
     try{
       User upuser = User(
       uid: getUser.uid,
@@ -127,10 +126,32 @@ class UserRepository with ChangeNotifier {
       name: getUser.name,
       profilePhoto: getUser.profilePhoto,
       username: getUser.username,
-      // familyName: familyName,
+      familyName: familyName,
       familyId: familyId,
     );
-    firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upuser.toMap(upuser));
+    await firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upuser.toMap(upuser));
+    refreshUser();
+    notifyListeners();
+    return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  Future<bool> updateProfile(String name, String photoUrl)async{
+    refreshUser();
+    try{
+      User upuser = User(
+      uid: getUser.uid,
+      email: getUser.email,
+      name: name,
+      profilePhoto: photoUrl,
+      username: getUser.username,
+      familyName: getUser.familyName,
+      familyId: getUser.familyId,
+    );
+    await firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upuser.toMap(upuser));
+    refreshUser();
     notifyListeners();
     return true;
     }catch(e){

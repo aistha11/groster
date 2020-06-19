@@ -71,7 +71,7 @@ class FamilyMembers extends StatelessWidget {
                                   padding: const EdgeInsets.only(top: 5.0),
                                   child: Text(
                                     Utils.getFirstName(user.name),
-                                    style: TextStyle(color: Colors.white),
+                                    // style: TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ],

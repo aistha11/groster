@@ -6,6 +6,7 @@ import 'package:groster/pages/widgets/masterNoteItem.dart';
 import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/services/db_service.dart';
+import 'package:groster/utils/universal_variables.dart';
 import 'package:provider/provider.dart';
 
 class StreamMasterList extends StatelessWidget {
@@ -49,11 +50,13 @@ class StreamMasterList extends StatelessWidget {
                   separatorBuilder: (_, i) {
                     if (i.isEven)
                       return Divider(
-                        color: Colors.red,
+                        color: UniversalVariables.secondCol,
+                        thickness: 1,
                       );
                     else
                       return Divider(
-                        color: Colors.green,
+                        color: UniversalVariables.mainCol,
+                        thickness: 1,
                       );
                   },
                   itemCount: snapshot.data.length,

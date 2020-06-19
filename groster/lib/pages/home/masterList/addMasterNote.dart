@@ -2,6 +2,7 @@ import 'package:groster/models/masterNote.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/services/db_service.dart';
 import 'package:flutter/material.dart';
+import 'package:groster/utils/universal_variables.dart';
 import 'package:provider/provider.dart';
 
 class AddMasterNote extends StatefulWidget {
@@ -31,6 +32,7 @@ class _AddMasterNoteState extends State<AddMasterNote> {
     return Scaffold(
       key: _key,
       appBar: AppBar(
+        backgroundColor: UniversalVariables.mainCol,
         leading: IconButton(
             icon: Icon(Icons.clear, size: 29.0, color: Colors.white),
             onPressed: () {
@@ -49,6 +51,7 @@ class _AddMasterNoteState extends State<AddMasterNote> {
             const SizedBox(height: 10.0),
             const SizedBox(height: 10.0),
             RaisedButton(
+              color: UniversalVariables.iconCol,
               child: _processing ? CircularProgressIndicator() : Text("Save"),
               onPressed: _processing
                   ? null

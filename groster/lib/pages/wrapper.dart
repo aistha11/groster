@@ -1,7 +1,6 @@
 import 'package:groster/enum/auth_state.dart';
 import 'package:groster/pages/auth/loginPage.dart';
 import 'package:groster/pages/home/home.dart';
-import 'package:groster/pages/widgets/shimmering/shimmerHome.dart';
 import 'package:groster/pages/widgets/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:groster/resources/user_repository.dart';
@@ -20,7 +19,7 @@ class Wrapper extends StatelessWidget {
         case Status.Authenticated:
           return Home();
         default:
-          return ShimmerHome();
+          return Splash();
       }
     });
   }
