@@ -32,24 +32,19 @@ dependencies:
   firebase_core_web:
   shared_preferences:
   shimmer:
-  gradient_app_bar:
   emoji_picker:
   image_picker:
   path_provider:
   firebase_storage:
   cached_network_image:
   permission_handler: 3.0.0
-  sqflite:
-  hive:
   intl:
   image:
   flutter_facebook_login:
   sleek_circular_slider:
   unicorndial: ^1.1.5
   gradient_widgets:
-  json_annotation:
   share:
-  # firebase_dynamic_links:
   fluttertoast:
 
 

@@ -6,12 +6,16 @@ class QuietBox extends StatelessWidget {
   final String title;
   final String subtitle;
   final String buttonText;
+  final String buttonText1;
   final String navRoute;
+  final String navRoute1;
   const QuietBox({
     @required this.title,
     @required this.subtitle,
     @required this.buttonText,
+    this.buttonText1,
     @required this.navRoute,
+    this.navRoute1
   });
   @override
   Widget build(BuildContext context) {
@@ -49,6 +53,11 @@ class QuietBox extends StatelessWidget {
                 child: Text(buttonText),
                 onPressed: () => Navigator.of(context).pushNamed(navRoute),
               ),
+              buttonText1 != null && navRoute1 != null? FlatButton(
+                color: UniversalVariables.secondCol,
+                child: Text(buttonText1),
+                onPressed: () => Navigator.of(context).pushNamed(navRoute1),
+              ):Container(),
             ],
           ),
         ),

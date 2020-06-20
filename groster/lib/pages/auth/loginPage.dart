@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:groster/enum/auth_state.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/func.dart';
+import 'package:groster/utils/universal_variables.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -41,10 +42,10 @@ class _LoginState extends State<Login> {
       // }
     }
 
-    facebookSignIn() async {
-      print('Login With Facebook');
-      await user.signUpWithFacebook(context);
-    }
+    // facebookSignIn() async {
+    //   print('Login With Facebook');
+    //   await user.signUpWithFacebook(context);
+    // }
 
     return WillPopScope(
       onWillPop: () async {
@@ -79,7 +80,7 @@ class _LoginState extends State<Login> {
                   //     style: TextStyle(fontSize: 27.0),
                   //   ),
                   // ),
-                  child: Image.asset("images/grocery2.jpg",fit: BoxFit.cover),
+                  child: Image.asset("images/grocery2.jpg", fit: BoxFit.cover),
                 ),
                 //Loading Progress Bar while Authenticating
                 user.status == Status.Authenticating
@@ -95,7 +96,7 @@ class _LoginState extends State<Login> {
                 ),
                 //Divider
                 Divider(
-                  thickness: 3.0,
+                  thickness: 2.0,
                   color: Colors.red,
                   indent: 120.0,
                   endIndent: 120.0,
@@ -104,11 +105,16 @@ class _LoginState extends State<Login> {
                   alignment: WrapAlignment.center,
                   children: [
                     //Login With Google
-                    buildButton('google', FontAwesomeIcons.google,
-                        Colors.orange, Colors.lime, googleSignIn),
-                    //Login With Facebook
-                    buildButton('facebook', FontAwesomeIcons.facebook,
-                        Colors.indigo, Colors.blue, facebookSignIn),
+                    buildButton(
+                      'Continue with Google',
+                      FontAwesomeIcons.google,
+                      Colors.orange,
+                      Colors.white,
+                      googleSignIn,
+                    ),
+                    // //Login With Facebook
+                    // buildButton('facebook', FontAwesomeIcons.facebook,
+                    //     Colors.indigo, Colors.blue, facebookSignIn),
                   ],
                 ),
                 //Sign Up
@@ -145,7 +151,7 @@ class _LoginState extends State<Login> {
       height: 55.0,
       // margin: EdgeInsets.only(left: 40.0),
       padding: EdgeInsets.all(10.0),
-      width: 160.0,
+      // width: 160.0,
       child: RaisedButton.icon(
         onPressed: func,
         icon: Icon(
@@ -155,7 +161,7 @@ class _LoginState extends State<Login> {
         ),
         label: Text(
           '$platForm',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         elevation: 3,
         color: bgCol,
@@ -199,11 +205,11 @@ class _SignInState extends State<SignIn> {
         key: _formKey,
         child: Column(
           children: [
-            //Login
-            Icon(
-              FontAwesomeIcons.peopleCarry,
-              size: 50.0,
-            ),
+            // //Login
+            // Icon(
+            //   FontAwesomeIcons.peopleCarry,
+            //   size: 50.0,
+            // ),
             //Username
             Container(
               margin: EdgeInsets.only(left: 40, right: 40.0, top: 30.0),
@@ -273,7 +279,7 @@ class _SignInState extends State<SignIn> {
             //Login Button
             const SizedBox(height: 20.0),
             RaisedButton(
-              color: Colors.pink,
+              color: UniversalVariables.secondCol,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(40))),
               textColor: Colors.white,
@@ -286,7 +292,8 @@ class _SignInState extends State<SignIn> {
                       context: context,
                       builder: (_) => AlertDialog(
                         title: Text('Error'),
-                        content: Text("Sorry we cann't log into your account now"),
+                        content:
+                            Text("Sorry we cann't log into your account now"),
                       ),
                       barrierDismissible: true,
                     );
@@ -352,7 +359,7 @@ class _SignUpState extends State<SignUp> {
               margin: EdgeInsets.only(left: 40, right: 40.0, top: 10.0),
               child: TextFormField(
                 validator: (val) {
-                  if(val.isEmpty) return "*Enter your First Name";
+                  if (val.isEmpty) return "*Enter your First Name";
                   return null;
                 },
                 controller: _fName,
@@ -379,7 +386,7 @@ class _SignUpState extends State<SignUp> {
               margin: EdgeInsets.only(left: 40, right: 40.0, top: 10.0),
               child: TextFormField(
                 validator: (val) {
-                  if(val.isEmpty) return "*Enter your Last Name";
+                  if (val.isEmpty) return "*Enter your Last Name";
                   return null;
                 },
                 controller: _lName,
@@ -507,7 +514,7 @@ class _SignUpState extends State<SignUp> {
             //Login Button
             const SizedBox(height: 20.0),
             RaisedButton(
-              color: Colors.pink,
+              color: UniversalVariables.secondCol,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(40))),
               textColor: Colors.white,
@@ -517,7 +524,8 @@ class _SignUpState extends State<SignUp> {
                 if (_formKey.currentState.validate()) {
                   if (_confirmPassword.text == _password.text) {
                     String name = "${_fName.text} ${_lName.text}";
-                    if (!await user.signUp(context, _email.text, _password.text, name))
+                    if (!await user.signUp(
+                        context, _email.text, _password.text, name))
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(

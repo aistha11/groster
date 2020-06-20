@@ -6,6 +6,7 @@ import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -49,7 +50,7 @@ class _SearchScreenState extends State<SearchScreen> {
           color: Colors.grey[300],
           child: TextField(
             controller: searchController,
-            onSubmitted: (val) {
+            onChanged: (val) {
               setState(() {
                 query = val;
               });
@@ -97,7 +98,16 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  buildSuggestions(String query) {
+  bool matchesFamId(famId,familyId){
+    if(familyId==null)
+      return false;
+    else if(famId == familyId)
+      return true;
+    else
+      return false;
+  }
+
+  buildSuggestions(String query, String familyId) {
     final List<User> suggestionList = query.isEmpty
         ? []
         : userList != null
@@ -111,73 +121,80 @@ class _SearchScreenState extends State<SearchScreen> {
                 String _query = query.toLowerCase();
                 bool matchesEmail = _getEmail == _query ? true : false;
                 // return (matchesUsername || matchesName);
-                return (matchesEmail);
+                return (matchesEmail || matchesFamId(user.familyId,familyId));
               }).toList()
             : [];
 
     if (suggestionList.isEmpty) {
       if (query.isNotEmpty) {
-        return Container(
-          child: Center(
-            child: Text("Sorry! Searched User Not Found"),
+        return Flexible(
+                  child: Container(
+            child: Center(
+              child: Text("First Setup the family profile"),
+            ),
           ),
         );
       } else {
-        return Container(
-          child: Center(
-            child: Text("Search User"),
+        return Flexible(
+                  child: Container(
+            child: Center(
+              child: Text("Search User"),
+            ),
           ),
         );
       }
     }
 
-    return ListView.builder(
-      itemCount: suggestionList.length,
-      itemBuilder: ((context, index) {
-        User searchedUser = User(
-            uid: suggestionList[index].uid,
-            profilePhoto: suggestionList[index].profilePhoto,
-            name: suggestionList[index].name,
-            username: suggestionList[index].username);
+    return Flexible(
+          child: ListView.builder(
+        itemCount: suggestionList.length,
+        itemBuilder: ((context, index) {
+          User searchedUser = User(
+              uid: suggestionList[index].uid,
+              profilePhoto: suggestionList[index].profilePhoto,
+              name: suggestionList[index].name,
+              username: suggestionList[index].username);
 
-        return CustomTile(
-          mini: false,
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ChatScreen(
-                          receiver: searchedUser,
-                        )));
-          },
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(searchedUser.profilePhoto),
-            backgroundColor: Colors.grey,
-          ),
-          title: Text(
-            searchedUser.username,
-            style: TextStyle(
-              color: UniversalVariables.titCol,
-              fontWeight: FontWeight.bold,
+          return CustomTile(
+            mini: false,
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChatScreen(
+                            receiver: searchedUser,
+                          )));
+            },
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(searchedUser.profilePhoto),
+              backgroundColor: Colors.grey,
             ),
-          ),
-          subtitle: Text(
-            searchedUser.name,
-            style: TextStyle(color: UniversalVariables.lastMsgCol),
-          ),
-        );
-      }),
+            title: Text(
+              searchedUser.username,
+              style: TextStyle(
+                color: UniversalVariables.titCol,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(
+              searchedUser.name,
+              style: TextStyle(color: UniversalVariables.lastMsgCol),
+            ),
+          );
+        }),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    UserRepository userRepository = Provider.of<UserRepository>(context);
     return Scaffold(
       backgroundColor: UniversalVariables.backgroundCol,
       appBar: searchAppBar(context),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
-        child: buildSuggestions(query),
+        child: buildSuggestions(query,userRepository.getUser.familyId),
       ),
     );
   }

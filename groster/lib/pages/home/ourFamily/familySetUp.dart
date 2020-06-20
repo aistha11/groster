@@ -32,11 +32,12 @@ class _FamilySetUpState extends State<FamilySetUp> {
         leading: IconButton(
           icon: Icon(
             Icons.clear,
+            color: Colors.black,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: Text("Family SetUp"),
+        title: Text("Family SetUp", style: TextStyle(color: Colors.black),),
       ),
       body: Center(
         child: Container(

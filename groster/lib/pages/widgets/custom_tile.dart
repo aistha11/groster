@@ -1,4 +1,3 @@
-import 'package:groster/utils/universal_variables.dart';
 import 'package:flutter/material.dart';
 class CustomTile extends StatelessWidget {
   final Widget leading;
@@ -42,7 +41,7 @@ class CustomTile extends StatelessWidget {
                     border: Border(
                         bottom: BorderSide(
                             width: 1,
-                            color: UniversalVariables.separatorColor))),
+                            color: Colors.grey[100]))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[

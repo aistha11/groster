@@ -12,20 +12,23 @@ class MasterNoteItem extends StatelessWidget {
   final Function(MasterNote) onEdit;
   final Function(MasterNote) onDelete;
   final Function(MasterNote) onTap;
+  final Function(MasterNote) onLongPressed;
   const MasterNoteItem(
       {Key key,
       @required this.note,
       @required this.onEdit,
       @required this.onDelete,
+      @required this.onLongPressed,
       this.onTap})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     UserRepository userRepository = Provider.of<UserRepository>(context);
     userRepository.refreshUser();
-    bool isMyNote(){
+    bool isMyNote() {
       return userRepository.getUser.uid == note.userId ? true : false;
     }
+
     return FutureBuilder(
       future: userRepository.getUserDetailsById(note.userId),
       builder: (context, snapshot) {
@@ -67,7 +70,13 @@ class MasterNoteItem extends StatelessWidget {
                   ),
                 ),
                 onTap: () => onTap(note),
-                title: Text(note.title),
+                onLongPress: () => onLongPressed(note),
+                title: Text(
+                  "${note.title} - ${note.quantity}",
+                  style: TextStyle(
+                     decoration: note.completed ? TextDecoration.lineThrough : TextDecoration.none,
+                  ),
+                ),
               ),
             ),
           );

@@ -4,9 +4,7 @@ import 'package:groster/pages/home/familyChat/search_screen.dart';
 import 'package:groster/pages/home/familyGroupChat/familyGroupChat.dart';
 import 'package:groster/pages/home/masterList/addMasterNote.dart';
 import 'package:groster/pages/home/ourFamily/familySetUp.dart';
-import 'package:groster/pages/home/ourFamily/ourFamily.dart';
 import 'package:groster/pages/home/personalList/addPersonalNote.dart';
-import 'package:groster/pages/home/profile/profile.dart';
 import 'package:groster/pages/wrapper.dart';
 import 'package:groster/provider/image_upload_provider.dart';
 import 'package:groster/resources/user_repository.dart';
@@ -30,8 +28,8 @@ class MyApp extends StatelessWidget {
           "/addPersonalNote": (_) => AddPersonalNote(),
           "/addMasterNote": (_) => AddMasterNote(),
           '/search_screen': (context) => SearchScreen(),
-          "/profile": (_) => Profile(),
-          "/ourFamily": (_) => OurFamily(),
+          // "/profile": (_) => Profile(),
+          // "/ourFamily": (_) => OurFamily(),
           "/setUpFamily":(_) => FamilySetUp(),
           "/familyGroupChat" : (_) => FamilyGroupChat(),
         },

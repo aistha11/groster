@@ -61,12 +61,17 @@ class _EditProfileState extends State<EditProfile> {
     }
 
     Future<String> pickImage({@required ImageSource source}) async {
-      File selectedImage = await Utils.pickImage(source: source);
+      try{
+        File selectedImage = await Utils.pickImage(source: source);
       if (selectedImage != null) {
         // Get url from the image bucket
         String url = await uploadImageToStorage(selectedImage);
         return url;
       } else {
+        return widget.eUser.profilePhoto;
+      }
+      }catch(e){
+        Func.showToast(e.toString());
         return widget.eUser.profilePhoto;
       }
     }
@@ -119,11 +124,11 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       IconButton(
                         icon: Icon(Icons.image),
-                        onPressed: () {
+                        onPressed: () async {
                           setState(() {
                             _uploading = true;
                           });
-                          pickImage(source: ImageSource.gallery)
+                          await pickImage(source: ImageSource.gallery)
                               .then((value) {
                             setState(() {
                               imageUrl = value;
@@ -137,11 +142,11 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       IconButton(
                         icon: Icon(Icons.camera_alt),
-                        onPressed: () {
+                        onPressed: () async {
                            setState(() {
                             _uploading = true;
                           });
-                          pickImage(source: ImageSource.camera).then((value) {
+                          await pickImage(source: ImageSource.camera).then((value) {
                             setState(() {
                               imageUrl = value;
                               _uploading = false;
@@ -204,19 +209,25 @@ class _EditProfileState extends State<EditProfile> {
                         _saving = true;
                       });
                       Func.hideKeyboard(textFieldFocus);
+                      User upUser = User(
+                        uid: widget.eUser.uid,
+                        name: "${_firstName.text} ${_lastName.text}",
+                        profilePhoto: imageUrl,
+                        username: widget.eUser.username,
+                        email: widget.eUser.email,
+                        familyId: widget.eUser.familyId,
+                        familyName: widget.eUser.familyName
+                      );
                       if (_formKey.currentState.validate()) {
-                        if (await _userRepository.updateProfile(
-                                "${_firstName.text} ${_lastName.text}",
-                                imageUrl) ==
-                            true) {
+                        if (await _userRepository.updateProfile(upUser) == true) {
                           // await _userRepository.refreshUser();
                           setState(() {
                             _saving = false;
                           });
+                          Func.showToast("Profile Updated Successfully");
                           Navigator.of(context).pop();
                         } else {
-                          Func.showError(
-                              context, "Error while Updating Profile");
+                          Func.showToast("Error while Updating Profile");
                         }
                       }
                     },

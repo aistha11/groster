@@ -28,7 +28,7 @@ class LastMessageContainer extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: UniversalVariables.lastMsgCol,
-                  fontSize: 14,
+                  fontSize: 10,
                 ),
               ),
             );
@@ -37,7 +37,7 @@ class LastMessageContainer extends StatelessWidget {
             "No Message",
             style: TextStyle(
               color: Colors.grey,
-              fontSize: 14,
+              fontSize: 10,
             ),
           );
         }
@@ -45,7 +45,7 @@ class LastMessageContainer extends StatelessWidget {
           "..",
           style: TextStyle(
             color: Colors.grey,
-            fontSize: 14,
+            fontSize: 10,
           ),
         );
       },

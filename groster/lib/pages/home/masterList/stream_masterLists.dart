@@ -15,15 +15,16 @@ class StreamMasterList extends StatelessWidget {
     UserRepository userRepository = Provider.of<UserRepository>(context);
     userRepository.refreshUser();
     final String fuid = userRepository.getUser.familyId;
-    return fuid == null
+    return 
+      userRepository.getUser.familyId == null
         ? Container(
             child: QuietBox(
-                title: "Set Up Your Family Profile",
-                subtitle: "After this you can add the family list",
-                buttonText: "SetUp Now",
+                title: "Set up your Family Profile",
+                subtitle: "Here you can add the family list",
+                buttonText: "SET UP NOW",
                 navRoute: "/setUpFamily"),
-          )
-        : StreamBuilder(
+          ):
+           StreamBuilder(
             stream: masternotesDb.streamMasterList(fuid),
             builder: (BuildContext context,
                 AsyncSnapshot<List<MasterNote>> snapshot) {
@@ -37,7 +38,7 @@ class StreamMasterList extends StatelessWidget {
               if (snapshot.hasData) {
                 var docList = snapshot.data;
 
-                if (docList.isEmpty) {
+                if (docList.isEmpty || userRepository.getUser.familyId == null) {
                   return QuietBox(
                     title: "This is where all your master list are shown",
                     subtitle:
@@ -63,6 +64,18 @@ class StreamMasterList extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return MasterNoteItem(
                       note: snapshot.data[index],
+                      onLongPressed: (note)async{
+                        MasterNote upNote = MasterNote(
+                          id: note.id,
+                          userId: note.userId,
+                          createdAt: note.createdAt,
+                          completed: true,
+                          familyId: note.familyId,
+                          quantity: note.quantity,
+                          title: note.title,
+                        );
+                        await masternotesDb.updateItem(upNote);
+                      },
                       onEdit: (note) {
                         Navigator.push(
                             context,
@@ -82,12 +95,7 @@ class StreamMasterList extends StatelessWidget {
                 );
               }
 
-              return ListView(
-                children: [
-                  MyShimmer.shimMasterTile(),
-                  MyShimmer.shimMasterTile(),
-                ],
-              );
+              return MyShimmer.shimCont(double.infinity);
             },
           );
   }

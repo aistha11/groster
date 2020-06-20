@@ -1,4 +1,3 @@
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:groster/constants/strings.dart';
@@ -6,7 +5,6 @@ import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/quiet_box.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/home/ourFamily/famMembers.dart';
-import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/func.dart';
 import 'package:groster/utils/universal_variables.dart';
@@ -14,32 +12,34 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class OurFamily extends StatelessWidget {
+  final UserRepository _userRepository = UserRepository.instance();
   @override
   Widget build(BuildContext context) {
-    final UserRepository userRepository = Provider.of<UserRepository>(context);
-    userRepository.refreshUser();
+    final UserRepository userRepository =
+        Provider.of<UserRepository>(context);
+    _userRepository.refreshUser();
     final User user = userRepository.getUser;
 
     return Scaffold(
       backgroundColor: UniversalVariables.backgroundCol,
-      appBar: CustomAppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.clear,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        centerTitle: true,
-        title: Text("Family Profile",style: TextStyle(color: Colors.black),),
-      ),
+      // appBar: CustomAppBar(
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.clear,
+      //       color: Colors.black,
+      //     ),
+      //     onPressed: () => Navigator.pop(context),
+      //   ),
+      //   centerTitle: true,
+      //   title: Text("Family Profile",style: TextStyle(color: Colors.black),),
+      // ),
       body: user.familyId == null
           ? Container(
               child: QuietBox(
-                  title: "Set Up Your Family Profile",
+                  title: "Set up your Family Profile",
                   subtitle:
-                      "After this you can add the family list & also group chat with your family",
-                  buttonText: "SetUp Now",
+                      "After this you can add the family list & group chat with your family",
+                  buttonText: "SET UP NOW",
                   navRoute: "/setUpFamily"),
             )
           : Container(
@@ -56,7 +56,7 @@ class OurFamily extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () {
                               Navigator.of(context)
-                                  .pushReplacementNamed("/familyGroupChat");
+                                  .pushNamed("/familyGroupChat");
                             },
                             child: Container(
                               width: 70,
@@ -174,7 +174,6 @@ class OurFamily extends StatelessWidget {
                             Navigator.of(context).pushNamed("/setUpFamily");
                           },
                         ),
-
                         ListTile(
                           leading: Icon(
                             Icons.share,
@@ -188,9 +187,34 @@ class OurFamily extends StatelessWidget {
                           onTap: () {
                             Func.share(
                               context,
-                              "Our Family Id is ${user.familyId}",
+                              "Setup Family with \nFamily Name : ${user.familyName} \n Family Id : ${user.familyId}",
                               "Join Family",
                             );
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.remove_circle_outline,
+                          ),
+                          title: Text(
+                            "Leave Group",
+                          ),
+                          contentPadding: EdgeInsets.only(left: 70.0),
+                          onTap: () async {
+                            User upUser = User(
+                              uid: user.uid,
+                              email: user.email,
+                              name: user.name,
+                              profilePhoto: user.profilePhoto,
+                              username: user.username,
+                              familyName: null,
+                              familyId: null,
+                            );
+                            if (!await _userRepository.leaveFamily(upUser)) {
+                              Func.showToast("Error While Leaving Group");
+                            } else {
+                              Func.showToast("Leaved Group Successfully");
+                            }
                           },
                         ),
                       ],

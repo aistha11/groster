@@ -4,7 +4,6 @@ import 'package:groster/enum/user_state.dart';
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/home/profile/editProfile.dart';
-import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/func.dart';
 import 'package:groster/utils/universal_variables.dart';
@@ -20,20 +19,20 @@ class Profile extends StatelessWidget {
     final User user = userRepository.getUser;
     return Scaffold(
       backgroundColor: UniversalVariables.backgroundCol,
-      appBar: CustomAppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.clear,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        centerTitle: true,
-        title: Text(
-          "Profile",
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
+      // appBar: CustomAppBar(
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.clear,
+      //       color: Colors.black,
+      //     ),
+      //     onPressed: () => Navigator.pop(context),
+      //   ),
+      //   centerTitle: true,
+      //   title: Text(
+      //     "Profile",
+      //     style: TextStyle(color: Colors.black),
+      //   ),
+      // ),
       body: Container(
         margin: EdgeInsets.only(top: 25),
         child: ListView(

@@ -27,21 +27,31 @@ class DatabaseService<T extends DatabaseItem> {
   }
 
   Stream<List<T>> streamList(String uid) {
-    var ref = _db.collection(collection).where("user_id", isEqualTo: uid).orderBy("created_at",descending: true);
+    var ref = _db
+        .collection(collection)
+        .where("user_id", isEqualTo: uid)
+        .orderBy("created_at", descending: true);
 
     return ref.snapshots().map((list) =>
         list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
   }
 
   Stream<List<T>> streamMasterList(String fuid) {
-    var ref = _db.collection(collection).where("family_id", isEqualTo: fuid).orderBy("created_at",descending: true);
+    var ref = _db
+        .collection(collection)
+        .where("family_id", isEqualTo: fuid)
+        .orderBy("created_at", descending: true)
+        .orderBy("completed", descending: true);
 
     return ref.snapshots().map((list) =>
         list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
   }
 
   Stream<List<T>> streamGroupMessages(String guid) {
-    var ref = _db.collection(collection).where("groupId", isEqualTo: guid).orderBy("timestamp",descending: true);
+    var ref = _db
+        .collection(collection)
+        .where("groupId", isEqualTo: guid)
+        .orderBy("timestamp", descending: true);
 
     return ref.snapshots().map((list) =>
         list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
@@ -140,15 +150,17 @@ class QueryArgs {
   QueryArgs(this.key, this.value);
 }
 
-DatabaseService<Note> personalnotesDb = DatabaseService<Note>(PERSONAL_COLLECTION,
-    fromDS: (id, data) => Note.fromDS(id, data), toMap: (note) => note.toMap());
+DatabaseService<Note> personalnotesDb = DatabaseService<Note>(
+    PERSONAL_COLLECTION,
+    fromDS: (id, data) => Note.fromDS(id, data),
+    toMap: (note) => note.toMap());
 
 DatabaseService<MasterNote> masternotesDb = DatabaseService<MasterNote>(
     MASTER_COLLECTION,
     fromDS: (id, data) => MasterNote.fromDS(id, data),
-    toMap: (masternote) => masternote.toMap()); 
+    toMap: (masternote) => masternote.toMap());
 
 DatabaseService<GroupMessage> grpMsgDb = DatabaseService<GroupMessage>(
     GROUP_MESSAGES,
     fromDS: (id, data) => GroupMessage.fromDS(id, data),
-    toMap: (masternote) => masternote.toMap()); 
+    toMap: (masternote) => masternote.toMap());

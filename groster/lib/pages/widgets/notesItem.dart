@@ -8,11 +8,13 @@ class NoteItem extends StatelessWidget {
   final Function(Note) onEdit;
   final Function(Note) onDelete;
   final Function(Note) onTap;
+  final Function(Note) onLongPressed;
   const NoteItem(
       {Key key,
       @required this.note,
       @required this.onEdit,
       @required this.onDelete,
+      this.onLongPressed,
       this.onTap})
       : super(key: key);
   @override
@@ -44,9 +46,18 @@ class NoteItem extends StatelessWidget {
         ],
         child: ListTile(
           onTap: () => onTap(note),
-          leading: Icon(FontAwesomeIcons.longArrowAltRight),
-          title: Text(note.title),
-          subtitle: Text(note.createdAt.toString(),style: TextStyle(fontSize: 11.0),),
+          leading: Icon(FontAwesomeIcons.circle),
+          title: Text(
+            "${note.title} - ${note.quantity}",
+            style: TextStyle(
+              decoration: note.completed? TextDecoration.lineThrough : TextDecoration.none,
+            ),
+          ),
+          subtitle: Text(
+            note.createdAt.toString(),
+            style: TextStyle(fontSize: 11.0),
+          ),
+          onLongPress: () => onLongPressed(note),
         ),
       ),
     );

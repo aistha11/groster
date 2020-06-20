@@ -1,6 +1,8 @@
+import 'package:groster/constants/icons.dart';
 import 'package:groster/models/note.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/quiet_box.dart';
 import 'package:groster/pages/home/personalList/addPersonalNote.dart';
+import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/pages/widgets/notesItem.dart';
 import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
 // import 'package:groster/provider/user_provider.dart';
@@ -17,6 +19,14 @@ class PersonalList extends StatelessWidget {
     userProvider.refreshUser();
     var uid = userProvider.user.uid;
     return Scaffold(
+      appBar: CustomAppBar(
+        leading: Icon(PERSONAL_ICON, color: Colors.black),
+        title: Text(
+          "Personal List",
+          style: TextStyle(color: Colors.black),
+        ),
+        centerTitle: false,
+      ),
       body: StreamBuilder(
         stream: personalnotesDb.streamList(uid),
         builder: (BuildContext context, AsyncSnapshot<List<Note>> snapshot) {
@@ -32,7 +42,7 @@ class PersonalList extends StatelessWidget {
               return QuietBox(
                 title: "This is where all your personal list are shown",
                 subtitle: "Start adding your own list",
-                buttonText: "Add To Personal List",
+                buttonText: "ADD TO PERSONAL LIST",
                 navRoute: "/addPersonalNote",
               );
             }
@@ -58,23 +68,34 @@ class PersonalList extends StatelessWidget {
                       personalnotesDb.removeItem(note.id);
                     }
                   },
-                  onTap: (note) {
-                    showDialog(
-                      context: context,
-                      child: AlertDialog(
-                        title: Text(note.title),
-                        content: Container(
-                          height: 200.0,
-                          child: Column(
-                            children: [
-                              Text('Id : ${note.id}'),
-                              Text('Created At : ${note.createdAt}'),
-                              Text('User Id : ${note.userId}'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                  // onTap: (note) {
+                  //   showDialog(
+                  //     context: context,
+                  //     child: AlertDialog(
+                  //       title: Text(note.title),
+                  //       content: Container(
+                  //         height: 200.0,
+                  //         child: Column(
+                  //           children: [
+                  //             Text('Id : ${note.id}'),
+                  //             Text('Created At : ${note.createdAt}'),
+                  //             Text('User Id : ${note.userId}'),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   );
+                  // },
+                  onLongPressed: (note)async{
+                    Note upNote = Note(
+                          id: note.id,
+                          userId: note.userId,
+                          createdAt: DateTime.now(),
+                          completed: true,
+                          quantity: note.quantity,
+                          title: note.title,
+                        );
+                        await personalnotesDb.updateItem(upNote);
                   },
                 );
               },

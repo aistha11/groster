@@ -134,23 +134,38 @@ class UserRepository with ChangeNotifier {
     notifyListeners();
     return true;
     }catch(e){
+      print("Updating");
+      print(e.toString());
       return false;
     }
   }
 
-  Future<bool> updateProfile(String name, String photoUrl)async{
+  Future<bool> leaveFamily(User upuser)async{
+    try{
+    await firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upuser.toMap(upuser));
+    refreshUser();
+    notifyListeners();
+    return true;
+    }catch(e){
+      print("Updating");
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updateProfile(User upUser)async{
     refreshUser();
     try{
-      User upuser = User(
-      uid: getUser.uid,
-      email: getUser.email,
-      name: name,
-      profilePhoto: photoUrl,
-      username: getUser.username,
-      familyName: getUser.familyName,
-      familyId: getUser.familyId,
-    );
-    await firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upuser.toMap(upuser));
+    //   User upuser = User(
+    //   uid: getUser.uid,
+    //   email: getUser.email,
+    //   name: name,
+    //   profilePhoto: photoUrl,
+    //   username: getUser.username,
+    //   familyName: getUser.familyName,
+    //   familyId: getUser.familyId,
+    // );
+    await firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upUser.toMap(upUser));
     refreshUser();
     notifyListeners();
     return true;
@@ -333,6 +348,10 @@ class UserRepository with ChangeNotifier {
     return userList;
   }
 
+  Stream<QuerySnapshot> fetchFamUsers(FirebaseUser currentUser, String famId) =>
+         firestore.collection(USERS_COLLECTION).where("family_id", isEqualTo: famId).snapshots();
+
+
   
 
   Future<void> signOut({context}) async {
@@ -341,7 +360,6 @@ class UserRepository with ChangeNotifier {
       _auth.signOut();
       _googleSignIn.signOut();
       _status = Status.Unauthenticated;
-      Navigator.pop(context);
       notifyListeners();
       return Future.delayed(Duration.zero);
     } catch (e) {

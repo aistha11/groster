@@ -6,6 +6,8 @@ class MasterNote extends DatabaseItem {
   final DateTime createdAt;
   final String userId;
   final String familyId;
+  final String quantity;
+  final bool completed;
 
   MasterNote({
     this.title,
@@ -13,6 +15,8 @@ class MasterNote extends DatabaseItem {
     this.createdAt,
     this.userId,
     this.familyId,
+    this.quantity,
+    this.completed
   }) : super(id);
 
   MasterNote.fromDS(String id, Map<String, dynamic> data)
@@ -21,6 +25,8 @@ class MasterNote extends DatabaseItem {
         userId = data['user_id'],
         createdAt = data['created_at']?.toDate(),
         familyId = data['family_id'],
+        quantity = data['quantity'],
+        completed = data['completed'],
         super(id);
 
   Map<String, dynamic> toMap() => {
@@ -28,5 +34,7 @@ class MasterNote extends DatabaseItem {
         "created_at": createdAt,
         "user_id": userId,
         "family_id": familyId,
+        "quantity" : quantity,
+        "completed":completed
       };
 }

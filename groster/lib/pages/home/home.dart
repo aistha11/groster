@@ -1,11 +1,12 @@
+import 'package:groster/constants/icons.dart';
 import 'package:groster/enum/user_state.dart';
 import 'package:groster/pages/home/familyChat/chats/chat_list_screen.dart';
-import 'package:groster/pages/home/familyChat/chats/widgets/user_circle.dart';
+import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/home/masterList/masterList.dart';
 import 'package:groster/pages/home/personalList/personalList.dart';
-import 'package:groster/pages/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:groster/pages/home/profile/viewProfile.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
 import 'package:provider/provider.dart';
@@ -16,13 +17,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with WidgetsBindingObserver {
-  // var currentIndex = 0;
-
   PageController pageController;
   int _page = 0;
   UserRepository userRepository;
 
-  final UserRepository _authMethods = UserRepository.instance();
+  final UserRepository _userRepository = UserRepository.instance();
 
   @override
   void initState() {
@@ -32,7 +31,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       userRepository = Provider.of<UserRepository>(context, listen: false);
       await userRepository.refreshUser();
 
-      _authMethods.setUserState(
+      _userRepository.setUserState(
         userId: userRepository.user.uid,
         userState: UserState.Online,
       );
@@ -52,35 +51,36 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    String currentUserId =
-        (userRepository != null && userRepository.getUser != null)
-            ? userRepository.getUser.uid
-            : "";
+    // String currentUserId =
+    //     (userRepository != null && userRepository.getUser != null)
+    //         ? userRepository.getUser.uid
+    //         : "";
+    String currentUserId = userRepository.user.uid;
 
     super.didChangeAppLifecycleState(state);
 
     switch (state) {
       case AppLifecycleState.resumed:
         currentUserId != null
-            ? _authMethods.setUserState(
+            ? _userRepository.setUserState(
                 userId: currentUserId, userState: UserState.Online)
             : print("resume state");
         break;
       case AppLifecycleState.inactive:
         currentUserId != null
-            ? _authMethods.setUserState(
+            ? _userRepository.setUserState(
                 userId: currentUserId, userState: UserState.Offline)
             : print("inactive state");
         break;
       case AppLifecycleState.paused:
         currentUserId != null
-            ? _authMethods.setUserState(
+            ? _userRepository.setUserState(
                 userId: currentUserId, userState: UserState.Waiting)
             : print("paused state");
         break;
       case AppLifecycleState.detached:
         currentUserId != null
-            ? _authMethods.setUserState(
+            ? _userRepository.setUserState(
                 userId: currentUserId, userState: UserState.Offline)
             : print("detached state");
         break;
@@ -97,62 +97,51 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     pageController.jumpToPage(page);
   }
 
-  String getTitleText() {
-    if (_page == 0)
-      return 'Master List';
-    else if (_page == 1)
-      return 'Personal List';
-    else
-      return 'Chat';
-  }
+  // String getTitleText() {
+  //   if (_page == 0)
+  //     return 'Master List';
+  //   else if (_page == 1)
+  //     return 'Personal List';
+  //   else if(_page == 2)
+  //     return 'Chat';
+  //   else 
+  //     return 'Profile';
+  // }
 
-  // final List<PopupMenuItem<String>> _popUpMenuItems = [
-  //   PopupMenuItem(
-  //     child: Text("Logout"),
-  //     value: "Logout",
-  //   )
-  // ];
 
-  CustomAppBar customAppBar(BuildContext context) {
-    return CustomAppBar(
-      leading: UserCircle(),
-      title: Text(
-        getTitleText(),
-        style: TextStyle(color: Colors.black),
-      ),
-      centerTitle: false,
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.people,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Navigator.of(context).pushNamed("/ourFamily");
-          },
-        ),
-        // PopupMenuButton<String>(
-        //   itemBuilder: (_) => _popUpMenuItems,
-        //   onSelected: (String value){
-        //     if(value == "Logout"){
-        //       _authMethods.signOut();
-        //     }
-        //   },
-        // ),
-      ],
-    );
-  }
+  // CustomAppBar customAppBar(BuildContext context) {
+  //   return CustomAppBar(
+  //     // leading: UserCircle(),
+  //     title: Text(
+  //       getTitleText(),
+  //       style: TextStyle(color: Colors.black),
+  //     ),
+  //     centerTitle: false,
+  //     actions: [
+  //       IconButton(
+  //         icon: Icon(
+  //           Icons.people,
+  //           color: Colors.black,
+  //         ),
+  //         onPressed: () {
+  //           Navigator.of(context).pushNamed("/ourFamily");
+  //         },
+  //       ),
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(context),
+      // appBar: customAppBar(context),
       backgroundColor: UniversalVariables.backgroundCol,
       body: PageView(
         children: [
           MasterList(),
           PersonalList(),
           ChatListScreen(),
+          ViewProfile(),
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
@@ -163,7 +152,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.view_list,
+              MASTER_ICON,
               color: (_page == 0) ? UniversalVariables.mainCol : Colors.grey,
             ),
             title: Text(
@@ -175,7 +164,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.filter_list,
+              PERSONAL_ICON,
               color: (_page == 1) ? UniversalVariables.mainCol : Colors.grey,
             ),
             title: Text(
@@ -187,13 +176,26 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.chat,
+              CHAT_ICON,
               color: (_page == 2) ? UniversalVariables.mainCol : Colors.grey,
             ),
             title: Text(
               'Chat',
               style: TextStyle(
                 color: (_page == 2) ? UniversalVariables.mainCol : Colors.grey,
+              ),
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: CachedImage(
+                userRepository.getUser.profilePhoto,
+                isRound: true,
+                radius: 30,
+              ),
+            title: Text(
+              'Profile',
+              style: TextStyle(
+                color: (_page == 3) ? UniversalVariables.mainCol : Colors.grey,
               ),
             ),
           ),

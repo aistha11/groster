@@ -63,7 +63,7 @@ class ViewLayout extends StatelessWidget {
       title: Text(
         (contact != null ? contact.name : null) != null ? contact.name : "..",
         style:
-            TextStyle(color: UniversalVariables.titCol, fontFamily: "Arial", fontSize: 19),
+            TextStyle(color: UniversalVariables.titCol, fontFamily: "Arial", fontSize: 15),
       ),
       subtitle: LastMessageContainer(
         stream: _chatMethods.fetchLastMessageBetween(
@@ -72,12 +72,12 @@ class ViewLayout extends StatelessWidget {
         ),
       ),
       leading: Container(
-        constraints: BoxConstraints(maxHeight: 50, maxWidth: 50),
+        constraints: BoxConstraints(maxHeight: 40, maxWidth: 40),
         child: Stack(
           children: <Widget>[
             CachedImage(
               contact.profilePhoto,
-              radius: 50,
+              radius: 40,
               isRound: true,
             ),
             OnlineDotIndicator(

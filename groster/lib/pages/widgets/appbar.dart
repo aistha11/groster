@@ -23,13 +23,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: UniversalVariables.mainCol,
-        border: Border(
-          bottom: BorderSide(
-            color: UniversalVariables.separatorColor,
-            width: 1.4,
-            style: BorderStyle.solid,
-          ),
-        ),
+        // border: Border(
+        //   bottom: BorderSide(
+        //     color: UniversalVariables.separatorColor,
+        //     width: 1.4,
+        //     style: BorderStyle.solid,
+        //   ),
+        // ),
       ),
       child: AppBar(
         backgroundColor: UniversalVariables.mainCol,

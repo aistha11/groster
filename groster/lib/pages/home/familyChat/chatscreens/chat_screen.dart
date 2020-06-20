@@ -8,6 +8,7 @@ import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/pages/widgets/custom_tile.dart';
+import 'package:groster/pages/widgets/previewImage.dart';
 import 'package:groster/provider/image_upload_provider.dart';
 import 'package:groster/resources/chat_methods.dart';
 import 'package:groster/resources/storage_methods.dart';
@@ -62,7 +63,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   hideKeyboard() => textFieldFocus.unfocus();
 
-
   @override
   Widget build(BuildContext context) {
     _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
@@ -82,7 +82,11 @@ class _ChatScreenState extends State<ChatScreen> {
         centerTitle: false,
         title: Row(
           children: [
-            CachedImage(widget.receiver.profilePhoto, isRound: true, radius: 35.0,),
+            CachedImage(
+              widget.receiver.profilePhoto,
+              isRound: true,
+              radius: 35.0,
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
               child: Text(
@@ -199,11 +203,18 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           )
         : message.photoUrl != null
-            ? CachedImage(
-                message.photoUrl,
-                height: 250,
-                width: 250,
-                radius: 10,
+            ? GestureDetector(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                  return PreviewImage(imgUrl: message.photoUrl,);
+                }));
+              },
+                child: CachedImage(
+                  message.photoUrl,
+                  height: 250,
+                  width: 250,
+                  radius: 10,
+                ),
               )
             : Text("Url was null");
   }
@@ -239,7 +250,6 @@ class _ChatScreenState extends State<ChatScreen> {
       });
     }
 
-
     sendMessage() {
       var text = textFieldController.text;
 
@@ -265,14 +275,20 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Row(
         children: <Widget>[
           //Show an arrow to show add image option
-          isWriting ? GestureDetector(
-                  child: Icon(Icons.keyboard_arrow_right,color: UniversalVariables.mainCol, size: 30.0,),
-                  onTap: (){
+          isWriting
+              ? GestureDetector(
+                  child: Icon(
+                    Icons.keyboard_arrow_right,
+                    color: UniversalVariables.mainCol,
+                    size: 30.0,
+                  ),
+                  onTap: () {
                     setState(() {
                       isWriting = false;
                     });
                   },
-                ): Container(),
+                )
+              : Container(),
           //Add Image From gallery
           isWriting
               ? Container()
