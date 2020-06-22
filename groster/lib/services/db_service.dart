@@ -30,6 +30,7 @@ class DatabaseService<T extends DatabaseItem> {
     var ref = _db
         .collection(collection)
         .where("user_id", isEqualTo: uid)
+        .orderBy("completed", descending: false)
         .orderBy("created_at", descending: true);
 
     return ref.snapshots().map((list) =>
@@ -40,8 +41,8 @@ class DatabaseService<T extends DatabaseItem> {
     var ref = _db
         .collection(collection)
         .where("family_id", isEqualTo: fuid)
-        .orderBy("created_at", descending: true)
-        .orderBy("completed", descending: true);
+        .orderBy("completed", descending: false)
+        .orderBy("created_at", descending: true);
 
     return ref.snapshots().map((list) =>
         list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());

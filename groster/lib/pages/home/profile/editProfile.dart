@@ -12,7 +12,8 @@ import 'package:image_picker/image_picker.dart';
 
 class EditProfile extends StatefulWidget {
   final User eUser;
-  EditProfile({@required this.eUser});
+  final int mode;
+  EditProfile({@required this.eUser, @required this.mode});
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -20,20 +21,27 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   UserRepository _userRepository = UserRepository.instance();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _firstName;
-  TextEditingController _lastName;
+  TextEditingController _firstName = TextEditingController();
+  TextEditingController _lastName = TextEditingController();
   FocusNode textFieldFocus = FocusNode();
   String imageUrl;
   bool _uploading;
   bool _saving;
   @override
   void initState() {
-    _firstName = TextEditingController();
-    _lastName = TextEditingController();
+    _firstName.text = Utils.getFirstName(widget.eUser.name);
+    _lastName.text = Utils.getLastName(widget.eUser.name);
     imageUrl = widget.eUser.profilePhoto;
     _uploading = false;
     _saving = false;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _firstName.dispose();
+    _lastName.dispose();
+    super.dispose();
   }
 
   @override
@@ -113,7 +121,7 @@ class _EditProfileState extends State<EditProfile> {
                         height: 20,
                       ),
                   //For Profile Image
-                  Row(
+                  widget.mode == 0?Row(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(10.0),
@@ -155,7 +163,7 @@ class _EditProfileState extends State<EditProfile> {
                         },
                       ),
                     ],
-                  ),
+                  ):Container(),
 
                   SizedBox(
                     height: 15.0,
@@ -229,6 +237,10 @@ class _EditProfileState extends State<EditProfile> {
                         } else {
                           Func.showToast("Error while Updating Profile");
                         }
+                      }else{
+                        setState(() {
+                          _saving = false;
+                        });
                       }
                     },
                   )

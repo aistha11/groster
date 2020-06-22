@@ -47,8 +47,22 @@ class Func {
     );
   }
 
-  // static showSnackBar(context, String text){
-  //   var snackbar = SnackBar(content: Text(text));
-  //   Scaffold.of(context).showSnackBar(snackbar);
-  // }
+ static Future<bool> confirmBox(BuildContext context, String title, String content) async {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(title),
+              content: Text(content),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("No"),
+                  onPressed: () => Navigator.pop(context, false),
+                ),
+                FlatButton(
+                  child: Text("Yes"),
+                  onPressed: () => Navigator.pop(context, true),
+                ),
+              ],
+            ));
+  }
 }

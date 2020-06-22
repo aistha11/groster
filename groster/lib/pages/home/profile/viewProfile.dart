@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:groster/constants/icons.dart';
 import 'package:groster/pages/home/ourFamily/ourFamily.dart';
 import 'package:groster/pages/home/profile/profile.dart';
 import 'package:groster/pages/widgets/appbar.dart';
@@ -40,30 +41,15 @@ class _ViewProfileState extends State<ViewProfile> {
   @override
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[Profile(), OurFamily()];
-    // final _kTabs = [
-    //   Tab(
-    //     icon: Icon(
-    //       Icons.person,
-    //       color: Colors.black,
-    //     ),
-    //     text: 'Profile',
-    //   ),
-    //   Tab(
-    //     icon: Icon(
-    //       Icons.people,
-    //       color: Colors.black,
-    //     ),
-    //     text: 'Our Family',
-    //   )
-    // ];
     return Scaffold(
       appBar: CustomAppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
+              tooltip: "PROFILE",
                 icon: Icon(
-                  Icons.person,
+                  PROFILE_ICON,
                   color: (_page == 0) ? Colors.black : Colors.grey,
                 ),
                 onPressed: () {
@@ -71,8 +57,9 @@ class _ViewProfileState extends State<ViewProfile> {
                 }),
             Icon(Icons.swap_horiz, color: Colors.black,),
             IconButton(
+              tooltip: "FAMILY",
                 icon: Icon(
-                  Icons.people,
+                  FAMILY_ICON,
                   color:(_page == 1) ? Colors.black : Colors.grey,
                 ),
                 onPressed: () {
@@ -85,6 +72,7 @@ class _ViewProfileState extends State<ViewProfile> {
       body: PageView(
         controller: pageController,
         children: _kTabPages,
+        physics: NeverScrollableScrollPhysics(),
         onPageChanged: onPageChanged,
       ),
     );

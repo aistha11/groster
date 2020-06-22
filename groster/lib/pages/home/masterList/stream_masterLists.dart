@@ -69,7 +69,7 @@ class StreamMasterList extends StatelessWidget {
                           id: note.id,
                           userId: note.userId,
                           createdAt: note.createdAt,
-                          completed: true,
+                          completed: !note.completed,
                           familyId: note.familyId,
                           quantity: note.quantity,
                           title: note.title,

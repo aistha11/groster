@@ -18,6 +18,7 @@ class MasterList extends StatelessWidget {
       ),
       body: StreamMasterList(),
       floatingActionButton: FloatingActionButton(
+        tooltip: "ADD TO MASTER LIST",
         backgroundColor: UniversalVariables.secondCol,
         child: Icon(
           Icons.add,

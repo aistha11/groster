@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:groster/models/contact.dart';
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/online_dot_indicator.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/chat_screen.dart';
@@ -15,15 +14,15 @@ import 'package:provider/provider.dart';
 import 'last_message_container.dart';
 
 class ContactView extends StatelessWidget {
-  final Contact contact;
+  final User cUser;
   final UserRepository _authMethods = UserRepository.instance();
 
-  ContactView(this.contact);
+  ContactView(this.cUser);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<User>(
-      future: _authMethods.getUserDetailsById(contact.uid),
+      future: _authMethods.getUserDetailsById(cUser.uid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           User user = snapshot.data;

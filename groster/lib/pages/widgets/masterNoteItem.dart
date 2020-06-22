@@ -11,16 +11,16 @@ class MasterNoteItem extends StatelessWidget {
   final MasterNote note;
   final Function(MasterNote) onEdit;
   final Function(MasterNote) onDelete;
-  final Function(MasterNote) onTap;
+  // final Function(MasterNote) onTap;
   final Function(MasterNote) onLongPressed;
-  const MasterNoteItem(
-      {Key key,
-      @required this.note,
-      @required this.onEdit,
-      @required this.onDelete,
-      @required this.onLongPressed,
-      this.onTap})
-      : super(key: key);
+  const MasterNoteItem({
+    Key key,
+    @required this.note,
+    @required this.onEdit,
+    @required this.onDelete,
+    @required this.onLongPressed,
+    // this.onTap,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     UserRepository userRepository = Provider.of<UserRepository>(context);
@@ -61,7 +61,7 @@ class MasterNoteItem extends StatelessWidget {
                 ),
               ],
               child: ListTile(
-                leading: Container(
+                trailing: Container(
                   constraints: BoxConstraints(maxHeight: 50, maxWidth: 50),
                   child: CachedImage(
                     user.profilePhoto,
@@ -69,12 +69,14 @@ class MasterNoteItem extends StatelessWidget {
                     isRound: true,
                   ),
                 ),
-                onTap: () => onTap(note),
+                // onTap: () => onTap(note),
                 onLongPress: () => onLongPressed(note),
                 title: Text(
                   "${note.title} - ${note.quantity}",
                   style: TextStyle(
-                     decoration: note.completed ? TextDecoration.lineThrough : TextDecoration.none,
+                    decoration: note.completed
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
                   ),
                 ),
               ),

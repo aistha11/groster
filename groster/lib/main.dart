@@ -28,8 +28,6 @@ class MyApp extends StatelessWidget {
           "/addPersonalNote": (_) => AddPersonalNote(),
           "/addMasterNote": (_) => AddMasterNote(),
           '/search_screen': (context) => SearchScreen(),
-          // "/profile": (_) => Profile(),
-          // "/ourFamily": (_) => OurFamily(),
           "/setUpFamily":(_) => FamilySetUp(),
           "/familyGroupChat" : (_) => FamilyGroupChat(),
         },

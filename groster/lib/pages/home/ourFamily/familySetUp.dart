@@ -99,7 +99,7 @@ class _FamilySetUpState extends State<FamilySetUp> {
                                 _familyName.text, _familyId.text) ==
                             true) {
                           await userRepository.refreshUser();
-                          Navigator.of(context).pop();
+                          Navigator.pop(context);
                         } else {
                           print("Error While Updating");
                         }

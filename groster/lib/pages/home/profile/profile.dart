@@ -1,6 +1,5 @@
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:groster/constants/icons.dart';
 import 'package:groster/constants/strings.dart';
-import 'package:groster/enum/user_state.dart';
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/home/profile/editProfile.dart';
@@ -16,23 +15,10 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserRepository userRepository = Provider.of<UserRepository>(context);
+    userRepository.refreshUser();
     final User user = userRepository.getUser;
     return Scaffold(
       backgroundColor: UniversalVariables.backgroundCol,
-      // appBar: CustomAppBar(
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.clear,
-      //       color: Colors.black,
-      //     ),
-      //     onPressed: () => Navigator.pop(context),
-      //   ),
-      //   centerTitle: true,
-      //   title: Text(
-      //     "Profile",
-      //     style: TextStyle(color: Colors.black),
-      //   ),
-      // ),
       body: Container(
         margin: EdgeInsets.only(top: 25),
         child: ListView(
@@ -42,10 +28,51 @@ class Profile extends StatelessWidget {
               child: Column(
                 children: [
                   user.profilePhoto != null
-                      ? CachedImage(
-                          user.profilePhoto,
-                          isRound: true,
-                          radius: 80,
+                      ? Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: UniversalVariables.mainCol,
+                          ),
+                          child: Stack(
+                            overflow: Overflow.clip,
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: CachedImage(
+                                  user.profilePhoto,
+                                  isRound: true,
+                                  radius: 100.0 - 2.0,
+                                ),
+                              ),
+                              Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Container(
+                                    // padding: EdgeInsets.only(left: 30.0),
+                                    width: 35,
+                                    height: 35,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: UniversalVariables.iconProfileCol,
+                                    ),
+                                    child: IconButton(
+                                        icon: Icon(Icons.edit),
+                                        tooltip: "CHANGE PROFILE",
+                                        iconSize: 20,
+                                        color: Colors.white,
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(builder: (_) {
+                                            return EditProfile(
+                                              eUser: user,
+                                              mode: 0,
+                                            );
+                                          }));
+                                        }),
+                                  )),
+                            ],
+                          ),
                         )
                       : Container(
                           height: 80,
@@ -90,9 +117,21 @@ class Profile extends StatelessWidget {
                     height: 60.0,
                   ),
                   ListTile(
-                    leading: Icon(
-                      Icons.edit,
-                      // color: UniversalVariables.iconCol,
+                    leading: IconButton(
+                      tooltip: "EDIT PROFILE",
+                      icon: Icon(
+                        EDIT_ICON,
+                        // color: UniversalVariables.iconCol,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) {
+                          return EditProfile(
+                            eUser: user,
+                            mode: 1,
+                          );
+                        }));
+                      },
                     ),
                     title: Text(
                       "Edit Profile",
@@ -102,45 +141,29 @@ class Profile extends StatelessWidget {
                     ),
                     contentPadding: EdgeInsets.only(left: 70.0),
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_){
-                        return EditProfile(eUser: user);
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) {
+                        return EditProfile(
+                          eUser: user,
+                          mode: 1,
+                        );
                       }));
                     },
                   ),
-                  // ListTile(
-                  //   title: Text(
-                  //     "Help & Tips",
-                  //     style: TextStyle(color: Colors.white),
-                  //   ),
-                  //   contentPadding: EdgeInsets.only(left: 70.0),
-                  //   onTap: () {
-                  //     Func.toImplement(context, "Show Helps and Tips");
-                  //   },
-                  // ),
-                  // ListTile(
-                  //   title: Text(
-                  //     "Rate App",
-                  //     style: TextStyle(color: Colors.white),
-                  //   ),
-                  //   contentPadding: EdgeInsets.only(left: 70.0),
-                  //   onTap: () {
-                  //     Func.toImplement(context, "Go to playstore to rate app");
-                  //   },
-                  // ),
-                  // ListTile(
-                  //   title: Text(
-                  //     "About",
-                  //     style: TextStyle(color: Colors.white),
-                  //   ),
-                  //   contentPadding: EdgeInsets.only(left: 70.0),
-                  //   onTap: () {
-                  //     Func.toImplement(context, "Show the app details");
-                  //   },
-                  // ),
                   ListTile(
-                    leading: Icon(
-                      Icons.share,
-                      // color: UniversalVariables.iconCol,
+                    leading: IconButton(
+                      tooltip: "SHARE APP",
+                      icon: Icon(
+                        SHARE_ICON,
+                        // color: UniversalVariables.iconCol,
+                      ),
+                      onPressed: () {
+                        Func.share(
+                          context,
+                          "Hey! I would like to share Groster, A Grocery List App. $APP_URL",
+                          "Install App",
+                        );
+                      },
                     ),
                     title: Text(
                       "Share App",
@@ -158,9 +181,18 @@ class Profile extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    leading: Icon(
-                      FontAwesomeIcons.signOutAlt,
-                      // color: UniversalVariables.iconCol,
+                    leading: IconButton(
+                      tooltip: "LOG OUT",
+                      icon: Icon(
+                        LOGOUT_ICON,
+                        // color: UniversalVariables.iconCol,
+                      ),
+                      onPressed: () async {
+                        if (await Func.confirmBox(context, "Log Out",
+                            "Do you really want to log out?")) {
+                          await _userRepository.signOut(context: context);
+                        }
+                      },
                     ),
                     title: Text(
                       "Log Out",
@@ -168,12 +200,10 @@ class Profile extends StatelessWidget {
                     ),
                     contentPadding: EdgeInsets.only(left: 70.0),
                     onTap: () async {
-                      _userRepository.setUserState(
-                        userId: userRepository.getUser.uid,
-                        userState: UserState.Offline,
-                      );
-                      // Navigator.of(context).pop();
-                      await _userRepository.signOut(context: context);
+                      if (await Func.confirmBox(context, "Log Out",
+                          "Do you really want to log out?")) {
+                        await _userRepository.signOut(context: context);
+                      }
                     },
                   ),
                 ],

@@ -42,8 +42,8 @@ dependencies:
   image:
   flutter_facebook_login:
   sleek_circular_slider:
-  unicorndial: ^1.1.5
-  gradient_widgets:
+  # unicorndial: ^1.1.5
+  # gradient_widgets:
   share:
   fluttertoast:
 

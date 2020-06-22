@@ -1,4 +1,5 @@
 import 'package:groster/models/note.dart';
+import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/services/db_service.dart';
 import 'package:flutter/material.dart';
@@ -37,14 +38,21 @@ class _AddPersonalNoteState extends State<AddPersonalNote> {
     return Scaffold(
       key: _key,
       backgroundColor: UniversalVariables.backgroundCol,
-      appBar: AppBar(
-        backgroundColor: UniversalVariables.mainCol,
+      appBar: CustomAppBar(
+        centerTitle: false,
         leading: IconButton(
-            icon: Icon(Icons.clear, size: 29.0, color: Colors.white),
+            icon: Icon(
+              Icons.clear,
+              size: 29.0,
+              color: Colors.black,
+            ),
             onPressed: () {
               Navigator.pop(context);
             }),
-        title: Text('Add to Personal List'),
+        title: Text(
+          'Add to Personal List',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -99,32 +107,31 @@ class _AddPersonalNoteState extends State<AddPersonalNote> {
                                   listen: false)
                               .getUser
                               .uid,
-                              quantity:  _quantityController.text,
-                              completed: false,
+                          quantity: _quantityController.text,
+                          completed: false,
                         );
-                        if(_formKey.currentState.validate()){
-                          try{
-                             if (_editMode) {
-                          await personalnotesDb.updateItem(note);
-                        } else {
-                          await personalnotesDb.createItem(note);
-                        }
-                        setState(() {
-                          _processing = false;
-                        });
-                        Navigator.pop(context);
-                          }catch(e){
-                             setState(() {
+                        if (_formKey.currentState.validate()) {
+                          try {
+                            if (_editMode) {
+                              await personalnotesDb.updateItem(note);
+                            } else {
+                              await personalnotesDb.createItem(note);
+                            }
+                            setState(() {
+                              _processing = false;
+                            });
+                            Navigator.pop(context);
+                          } catch (e) {
+                            setState(() {
                               _processing = false;
                             });
                             Func.showToast("Something went wrong");
                           }
-                        }else{
+                        } else {
                           setState(() {
                             _processing = false;
                           });
                         }
-                       
                       },
               )
             ],

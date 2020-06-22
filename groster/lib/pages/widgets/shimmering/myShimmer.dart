@@ -71,7 +71,7 @@ class MyShimmer {
           horizontal: 8.0,
         ),
         child: ListTile(
-          leading: userCircle(35.0),
+          trailing: userCircle(35.0),
           title: shimCont(40),
         ),
       ),
@@ -129,6 +129,26 @@ class MyShimmer {
       child: ListTile(
         leading: userCircle(50),
         title: shimCont(50),
+      ),
+    );
+  }
+
+  static Widget shimFamUserTile() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300],
+      highlightColor: Colors.grey[100],
+      enabled: true,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        child: Column(
+          children: [
+            userCircle(50),
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: shimCont(10, width: 30),
+            )
+          ],
+        ),
       ),
     );
   }

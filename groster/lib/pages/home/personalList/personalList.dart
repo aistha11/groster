@@ -9,6 +9,7 @@ import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/services/db_service.dart';
 import 'package:flutter/material.dart';
+import 'package:groster/utils/func.dart';
 import 'package:groster/utils/universal_variables.dart';
 import 'package:provider/provider.dart';
 
@@ -64,33 +65,15 @@ class PersonalList extends StatelessWidget {
                         ));
                   },
                   onDelete: (note) async {
-                    if (await _confirmDelete(context)) {
+                    if (await Func.confirmBox(context,"Confirm Delete", "Do you really want to delete?")) {
                       personalnotesDb.removeItem(note.id);
                     }
                   },
-                  // onTap: (note) {
-                  //   showDialog(
-                  //     context: context,
-                  //     child: AlertDialog(
-                  //       title: Text(note.title),
-                  //       content: Container(
-                  //         height: 200.0,
-                  //         child: Column(
-                  //           children: [
-                  //             Text('Id : ${note.id}'),
-                  //             Text('Created At : ${note.createdAt}'),
-                  //             Text('User Id : ${note.userId}'),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   );
-                  // },
                   onLongPressed: (note)async{
                     Note upNote = Note(
                           id: note.id,
                           userId: note.userId,
-                          createdAt: DateTime.now(),
+                          createdAt: note.createdAt,
                           completed: true,
                           quantity: note.quantity,
                           title: note.title,
@@ -106,6 +89,7 @@ class PersonalList extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: "ADD TO PERSONAL LIST",
         backgroundColor: UniversalVariables.secondCol,
         child: Icon(Icons.add,color: UniversalVariables.backgroundCol,),
         onPressed: () {
@@ -115,22 +99,5 @@ class PersonalList extends StatelessWidget {
     );
   }
 
-  Future<bool> _confirmDelete(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text("Confirm Delete"),
-              content: Text("Are you sure you want to delete?"),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text("No"),
-                  onPressed: () => Navigator.pop(context, false),
-                ),
-                FlatButton(
-                  child: Text("Yes"),
-                  onPressed: () => Navigator.pop(context, true),
-                ),
-              ],
-            ));
-  }
+  
 }

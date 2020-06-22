@@ -1,4 +1,3 @@
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:groster/models/note.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -7,16 +6,16 @@ class NoteItem extends StatelessWidget {
   final Note note;
   final Function(Note) onEdit;
   final Function(Note) onDelete;
-  final Function(Note) onTap;
+  // final Function(Note) onTap;
   final Function(Note) onLongPressed;
-  const NoteItem(
-      {Key key,
-      @required this.note,
-      @required this.onEdit,
-      @required this.onDelete,
-      this.onLongPressed,
-      this.onTap})
-      : super(key: key);
+  const NoteItem({
+    Key key,
+    @required this.note,
+    @required this.onEdit,
+    @required this.onDelete,
+    this.onLongPressed,
+    // this.onTap,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,12 +44,14 @@ class NoteItem extends StatelessWidget {
           ),
         ],
         child: ListTile(
-          onTap: () => onTap(note),
-          leading: Icon(FontAwesomeIcons.circle),
+          // onTap: () => onTap(note),
+          // leading: Icon(FontAwesomeIcons.circle),
           title: Text(
-            "${note.title} - ${note.quantity}",
+            "${note.title}   -   ${note.quantity}",
             style: TextStyle(
-              decoration: note.completed? TextDecoration.lineThrough : TextDecoration.none,
+              decoration: note.completed
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none,
             ),
           ),
           subtitle: Text(

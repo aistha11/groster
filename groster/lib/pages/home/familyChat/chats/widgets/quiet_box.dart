@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:groster/utils/universal_variables.dart';
 
@@ -9,14 +8,13 @@ class QuietBox extends StatelessWidget {
   final String buttonText1;
   final String navRoute;
   final String navRoute1;
-  const QuietBox({
-    @required this.title,
-    @required this.subtitle,
-    @required this.buttonText,
-    this.buttonText1,
-    @required this.navRoute,
-    this.navRoute1
-  });
+  const QuietBox(
+      {@required this.title,
+      @required this.subtitle,
+      @required this.buttonText,
+      this.buttonText1,
+      @required this.navRoute,
+      this.navRoute1});
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -48,16 +46,27 @@ class QuietBox extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 25),
-              FlatButton(
-                color: UniversalVariables.secondCol,
-                child: Text(buttonText),
-                onPressed: () => Navigator.of(context).pushNamed(navRoute),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  buttonText1 != null && navRoute1 != null
+                      ? FlatButton(
+                          color: UniversalVariables.secondCol,
+                          child: Text(buttonText1),
+                          onPressed: () =>
+                              Navigator.of(context).pushNamed(navRoute1),
+                        )
+                      : Container(),
+                  buttonText1 != null && navRoute1 != null
+                      ? SizedBox(width: 5,)
+                      : Container(),
+                  FlatButton(
+                    color: UniversalVariables.secondCol,
+                    child: Text(buttonText),
+                    onPressed: () => Navigator.of(context).pushNamed(navRoute),
+                  ),
+                ],
               ),
-              buttonText1 != null && navRoute1 != null? FlatButton(
-                color: UniversalVariables.secondCol,
-                child: Text(buttonText1),
-                onPressed: () => Navigator.of(context).pushNamed(navRoute1),
-              ):Container(),
             ],
           ),
         ),

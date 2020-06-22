@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:groster/constants/icons.dart';
 import 'package:groster/constants/strings.dart';
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/quiet_box.dart';
@@ -15,24 +16,12 @@ class OurFamily extends StatelessWidget {
   final UserRepository _userRepository = UserRepository.instance();
   @override
   Widget build(BuildContext context) {
-    final UserRepository userRepository =
-        Provider.of<UserRepository>(context);
+    final UserRepository userRepository = Provider.of<UserRepository>(context);
     _userRepository.refreshUser();
     final User user = userRepository.getUser;
 
     return Scaffold(
       backgroundColor: UniversalVariables.backgroundCol,
-      // appBar: CustomAppBar(
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.clear,
-      //       color: Colors.black,
-      //     ),
-      //     onPressed: () => Navigator.pop(context),
-      //   ),
-      //   centerTitle: true,
-      //   title: Text("Family Profile",style: TextStyle(color: Colors.black),),
-      // ),
       body: user.familyId == null
           ? Container(
               child: QuietBox(
@@ -140,7 +129,7 @@ class OurFamily extends StatelessWidget {
                               ),
                               IconButton(
                                   icon: Icon(
-                                    Icons.content_copy,
+                                    COPYCLIPBOARD_ICON,
                                     color: Colors.black,
                                   ),
                                   onPressed: () {
@@ -162,7 +151,7 @@ class OurFamily extends StatelessWidget {
                         ),
                         ListTile(
                           leading: Icon(
-                            Icons.edit,
+                            EDIT_ICON,
                             // color: UniversalVariables.iconCol,
                           ),
                           title: Text(
@@ -176,7 +165,7 @@ class OurFamily extends StatelessWidget {
                         ),
                         ListTile(
                           leading: Icon(
-                            Icons.share,
+                            SHARE_ICON,
                             // color: UniversalVariables.iconCol,
                           ),
                           title: Text(
@@ -194,26 +183,28 @@ class OurFamily extends StatelessWidget {
                         ),
                         ListTile(
                           leading: Icon(
-                            Icons.remove_circle_outline,
+                            LEAVEGROUP_ICON,
                           ),
                           title: Text(
                             "Leave Group",
                           ),
                           contentPadding: EdgeInsets.only(left: 70.0),
                           onTap: () async {
-                            User upUser = User(
-                              uid: user.uid,
-                              email: user.email,
-                              name: user.name,
-                              profilePhoto: user.profilePhoto,
-                              username: user.username,
-                              familyName: null,
-                              familyId: null,
-                            );
-                            if (!await _userRepository.leaveFamily(upUser)) {
-                              Func.showToast("Error While Leaving Group");
-                            } else {
-                              Func.showToast("Leaved Group Successfully");
+                            if (await Func.confirmBox(context,"Leave Group","Do you really want to leave group?")) {
+                              User upUser = User(
+                                uid: user.uid,
+                                email: user.email,
+                                name: user.name,
+                                profilePhoto: user.profilePhoto,
+                                username: user.username,
+                                familyName: null,
+                                familyId: null,
+                              );
+                              if (!await _userRepository.leaveFamily(upUser)) {
+                                Func.showToast("Error While Leaving Group");
+                              } else {
+                                Func.showToast("Leaved Group Successfully");
+                              }
                             }
                           },
                         ),

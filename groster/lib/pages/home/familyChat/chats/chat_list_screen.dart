@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:groster/constants/icons.dart';
 import 'package:groster/constants/strings.dart';
-import 'package:groster/models/contact.dart';
+import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/contact_view.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/quiet_box.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/widgets/cached_image.dart';
 import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
-import 'package:groster/resources/chat_methods.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +30,7 @@ class ChatListScreen extends StatelessWidget {
         centerTitle: false,
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: "SEARCH FAMILY MEMBERS",
         backgroundColor: UniversalVariables.secondCol,
         child: Icon(Icons.search),
         onPressed: () {
@@ -103,24 +103,26 @@ class GroupChatTile extends StatelessWidget {
 }
 
 class ChatListContainer extends StatelessWidget {
-  final ChatMethods _chatMethods = ChatMethods();
-
+  // final ChatMethods _chatMethods = ChatMethods();
+  final UserRepository _userRepository = UserRepository.instance();
   @override
   Widget build(BuildContext context) {
-    final UserRepository userProvider = Provider.of<UserRepository>(context);
+     UserRepository userRepository = Provider.of<UserRepository>(context);
+    userRepository.refreshUser();
     return StreamBuilder<QuerySnapshot>(
-        stream: _chatMethods.fetchContacts(
-          userId: userProvider.user.uid,
-        ),
+        // stream: _chatMethods.fetchContacts( 
+        //   userId: userProvider.user.uid,
+        // ),
+        stream: _userRepository.fetchFamUsers(userRepository.user, userRepository.getUser.familyId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var docList = snapshot.data.documents;
 
-            if (docList.isEmpty || userProvider.getUser.familyId == null) {
+            if (docList.isEmpty || userRepository.getUser.familyId == null) {
               return QuietBox(
                 title: "This is where you can chat with family members",
                 subtitle: "Also a personal message to famaly member.",
-                buttonText: "START SEARCHING",
+                buttonText: "SEARCH",
                 navRoute: "/search_screen",
                 buttonText1: "SET UP FAMILY",
                 navRoute1: "/setUpFamily",
@@ -130,9 +132,9 @@ class ChatListContainer extends StatelessWidget {
               padding: EdgeInsets.all(10),
               itemCount: docList.length,
               itemBuilder: (context, index) {
-                Contact contact = Contact.fromMap(docList[index].data);
-
-                return ContactView(contact);
+                // Contact contact = Contact.fromMap(docList[index].data);
+                User fuser = User.fromMap(docList[index].data);
+                return fuser.uid != userRepository.getUser.uid ? ContactView(fuser) : Container();
               },
             );
           }

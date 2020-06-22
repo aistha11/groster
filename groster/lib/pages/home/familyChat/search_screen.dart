@@ -1,7 +1,6 @@
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chatscreens/chat_screen.dart';
 import 'package:groster/pages/widgets/custom_tile.dart';
-// import 'package:groster/resources/auth_methods.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/utils/universal_variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,6 +49,7 @@ class _SearchScreenState extends State<SearchScreen> {
           color: Colors.grey[300],
           child: TextField(
             controller: searchController,
+            keyboardType: TextInputType.emailAddress,
             onChanged: (val) {
               setState(() {
                 query = val;
@@ -127,21 +127,17 @@ class _SearchScreenState extends State<SearchScreen> {
 
     if (suggestionList.isEmpty) {
       if (query.isNotEmpty) {
-        return Flexible(
-                  child: Container(
+        return Container(
             child: Center(
               child: Text("First Setup the family profile"),
             ),
-          ),
-        );
+          );
       } else {
-        return Flexible(
-                  child: Container(
+        return Container(
             child: Center(
               child: Text("Search User"),
             ),
-          ),
-        );
+          );
       }
     }
 
