@@ -42,7 +42,8 @@ class FamilyMembers extends StatelessWidget {
                 itemCount: docList.length,
                 itemBuilder: (context, index) {
                   User fuser = User.fromMap(docList[index].data);
-                  return fuser.uid != userRepository.getUser.uid?FamilyUsers(fuser):Container();
+                  // return fuser.uid != userRepository.getUser.uid?FamilyUsers(fuser,index):Container();
+                  return FamilyUsers(fuser, index);
                 },
               );
             }
@@ -54,7 +55,8 @@ class FamilyMembers extends StatelessWidget {
 
 class FamilyUsers extends StatelessWidget {
   final User fuser;
-  FamilyUsers(this.fuser);
+  final int index;
+  FamilyUsers(this.fuser, this.index);
   @override
   Widget build(BuildContext context) {
     UserRepository userRepository = Provider.of<UserRepository>(context);

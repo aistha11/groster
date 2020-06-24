@@ -57,7 +57,7 @@ class _ViewProfileState extends State<ViewProfile> {
                 }),
             Icon(Icons.swap_horiz, color: Colors.black,),
             IconButton(
-              tooltip: "FAMILY",
+              tooltip: "GROUP",
                 icon: Icon(
                   FAMILY_ICON,
                   color:(_page == 1) ? Colors.black : Colors.grey,
@@ -72,7 +72,7 @@ class _ViewProfileState extends State<ViewProfile> {
       body: PageView(
         controller: pageController,
         children: _kTabPages,
-        physics: NeverScrollableScrollPhysics(),
+        // physics: NeverScrollableScrollPhysics(),
         onPageChanged: onPageChanged,
       ),
     );

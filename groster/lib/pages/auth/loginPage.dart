@@ -27,23 +27,9 @@ class _LoginState extends State<Login> {
     final user = Provider.of<UserRepository>(context);
     //Asynchronous Function For Firebase Login
     googleSignIn() async {
-      print('Login With Google');
       await user.signInWithGoogle(context);
-      // print(currentuser.uid);
-      // print(currentuser.email);
-      // print(currentuser.displayName);
-      // print(currentuser.photoUrl);
-      // if(currentuser!=null){
-      //   user.authenticateUser(currentuser).then((isNewUser){
-      //     if(isNewUser)
-      //       user.addDataToDb(currentuser);
-      //     // print("Added user to db");
-      //   });
-      // }
     }
-
     // facebookSignIn() async {
-    //   print('Login With Facebook');
     //   await user.signUpWithFacebook(context);
     // }
 
@@ -69,17 +55,10 @@ class _LoginState extends State<Login> {
                 Container(
                   height: signInForm ? 200.0 : 180.0,
                   decoration: BoxDecoration(
-                    // color: Colors.grey,
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(80.0),
                         bottomRight: Radius.circular(80.0)),
                   ),
-                  // child: Center(
-                  //   child: Text(
-                  //     'Family App List',
-                  //     style: TextStyle(fontSize: 27.0),
-                  //   ),
-                  // ),
                   child: Image.asset("images/grocery2.jpg", fit: BoxFit.cover),
                 ),
                 //Loading Progress Bar while Authenticating
@@ -134,7 +113,10 @@ class _LoginState extends State<Login> {
                     });
                   },
                   color: Colors.grey,
-                  borderSide: BorderSide(color: Colors.indigoAccent),
+                  borderSide: BorderSide(
+                    color: UniversalVariables.secondCol,
+                    width: 2.0
+                  ),
                   highlightColor: Colors.grey,
                 )
               ],

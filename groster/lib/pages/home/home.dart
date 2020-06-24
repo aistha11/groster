@@ -97,39 +97,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     pageController.jumpToPage(page);
   }
 
-  // String getTitleText() {
-  //   if (_page == 0)
-  //     return 'Master List';
-  //   else if (_page == 1)
-  //     return 'Personal List';
-  //   else if(_page == 2)
-  //     return 'Chat';
-  //   else 
-  //     return 'Profile';
-  // }
-
-
-  // CustomAppBar customAppBar(BuildContext context) {
-  //   return CustomAppBar(
-  //     // leading: UserCircle(),
-  //     title: Text(
-  //       getTitleText(),
-  //       style: TextStyle(color: Colors.black),
-  //     ),
-  //     centerTitle: false,
-  //     actions: [
-  //       IconButton(
-  //         icon: Icon(
-  //           Icons.people,
-  //           color: Colors.black,
-  //         ),
-  //         onPressed: () {
-  //           Navigator.of(context).pushNamed("/ourFamily");
-  //         },
-  //       ),
-  //     ],
-  //   );
-  // }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +121,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           BottomNavigationBarItem(
             icon: Icon(
               MASTER_ICON,
+              size: 30.0,
               color: (_page == 0) ? UniversalVariables.mainCol : Colors.grey,
             ),
             title: Text(
@@ -165,6 +134,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           BottomNavigationBarItem(
             icon: Icon(
               PERSONAL_ICON,
+              size: 20.0,
               color: (_page == 1) ? UniversalVariables.mainCol : Colors.grey,
             ),
             title: Text(

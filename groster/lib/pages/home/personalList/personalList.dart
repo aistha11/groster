@@ -1,11 +1,10 @@
-import 'package:groster/constants/icons.dart';
+import 'package:groster/constants/styles.dart';
 import 'package:groster/models/note.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/quiet_box.dart';
 import 'package:groster/pages/home/personalList/addPersonalNote.dart';
 import 'package:groster/pages/widgets/appbar.dart';
 import 'package:groster/pages/widgets/notesItem.dart';
 import 'package:groster/pages/widgets/shimmering/myShimmer.dart';
-// import 'package:groster/provider/user_provider.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:groster/services/db_service.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +20,12 @@ class PersonalList extends StatelessWidget {
     var uid = userProvider.user.uid;
     return Scaffold(
       appBar: CustomAppBar(
-        leading: Icon(PERSONAL_ICON, color: Colors.black),
+        // leading: Icon(PERSONAL_ICON, color: Colors.black),
         title: Text(
           "Personal List",
-          style: TextStyle(color: Colors.black),
+          style: APP_TITLE_STYLE,
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: StreamBuilder(
         stream: personalnotesDb.streamList(uid),
@@ -50,10 +49,21 @@ class PersonalList extends StatelessWidget {
             return ListView.separated(
               itemCount: snapshot.data.length,
               separatorBuilder: (_, i) {
-                return i.isEven ? Divider(color: Colors.blue,) : Divider(color: Colors.blueAccent,);
+                return i.isEven
+                    ? Divider(
+                        color: UniversalVariables.mainCol,
+                        // thickness: 1,
+                        height: 1.0,
+                      )
+                    : Divider(
+                        color: UniversalVariables.secondCol,
+                        // thickness: 1,
+                        height: 1.0,
+                      );
               },
               itemBuilder: (context, index) {
                 return NoteItem(
+                  index: index,
                   note: snapshot.data[index],
                   onEdit: (note) {
                     Navigator.push(
@@ -65,20 +75,21 @@ class PersonalList extends StatelessWidget {
                         ));
                   },
                   onDelete: (note) async {
-                    if (await Func.confirmBox(context,"Confirm Delete", "Do you really want to delete?")) {
+                    if (await Func.confirmBox(context, "Confirm Delete",
+                        "Do you really want to delete?")) {
                       personalnotesDb.removeItem(note.id);
                     }
                   },
-                  onLongPressed: (note)async{
+                  onLongPressed: (note) async {
                     Note upNote = Note(
-                          id: note.id,
-                          userId: note.userId,
-                          createdAt: note.createdAt,
-                          completed: true,
-                          quantity: note.quantity,
-                          title: note.title,
-                        );
-                        await personalnotesDb.updateItem(upNote);
+                      id: note.id,
+                      userId: note.userId,
+                      createdAt: note.createdAt,
+                      completed: !note.completed,
+                      quantity: note.quantity,
+                      title: note.title,
+                    );
+                    await personalnotesDb.updateItem(upNote);
                   },
                 );
               },
@@ -91,13 +102,14 @@ class PersonalList extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         tooltip: "ADD TO PERSONAL LIST",
         backgroundColor: UniversalVariables.secondCol,
-        child: Icon(Icons.add,color: UniversalVariables.backgroundCol,),
+        child: Icon(
+          Icons.add,
+          color: UniversalVariables.backgroundCol,
+        ),
         onPressed: () {
           Navigator.pushNamed(context, "/addPersonalNote");
         },
       ),
     );
   }
-
-  
 }

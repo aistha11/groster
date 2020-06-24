@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:groster/constants/icons.dart';
 import 'package:groster/constants/strings.dart';
+import 'package:groster/constants/styles.dart';
 import 'package:groster/models/user.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/contact_view.dart';
 import 'package:groster/pages/home/familyChat/chats/widgets/quiet_box.dart';
@@ -19,15 +19,15 @@ class ChatListScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: UniversalVariables.backgroundCol,
       appBar: CustomAppBar(
-        leading: Icon(
-          CHAT_ICON,
-          color: Colors.black,
-        ),
+        // leading: Icon(
+        //   CHAT_ICON,
+        //   color: Colors.black,
+        // ),
         title: Text(
           "Chat",
-          style: TextStyle(color: Colors.black),
+          style: APP_TITLE_STYLE,
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: "SEARCH FAMILY MEMBERS",
@@ -120,11 +120,11 @@ class ChatListContainer extends StatelessWidget {
 
             if (docList.isEmpty || userRepository.getUser.familyId == null) {
               return QuietBox(
-                title: "This is where you can chat with family members",
-                subtitle: "Also a personal message to famaly member.",
+                title: "This is where you can chat with group members",
+                subtitle: "Also a personal message to group member.",
                 buttonText: "SEARCH",
                 navRoute: "/search_screen",
-                buttonText1: "SET UP FAMILY",
+                buttonText1: "SET UP GROUP",
                 navRoute1: "/setUpFamily",
               );
             }

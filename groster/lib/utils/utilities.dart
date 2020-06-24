@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:groster/enum/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Im;
@@ -34,6 +35,17 @@ class Utils {
     List<String> nameSplit = name.split(" ");
     String lastName = nameSplit[1];
     return lastName;
+  }
+
+  static TextSpan getMessageTime(Timestamp timestamp) {
+    var time = DateFormat.jm().format(timestamp.toDate());
+    return TextSpan(
+      text: "       $time",
+      style: TextStyle(
+        fontSize: 11.0,
+        color: Colors.white60,
+      ),
+    );
   }
 
   // this is new

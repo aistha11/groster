@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:groster/models/masterNote.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -11,6 +12,7 @@ class MasterNoteItem extends StatelessWidget {
   final MasterNote note;
   final Function(MasterNote) onEdit;
   final Function(MasterNote) onDelete;
+  final int index;
   // final Function(MasterNote) onTap;
   final Function(MasterNote) onLongPressed;
   const MasterNoteItem({
@@ -19,6 +21,7 @@ class MasterNoteItem extends StatelessWidget {
     @required this.onEdit,
     @required this.onDelete,
     @required this.onLongPressed,
+    @required this.index
     // this.onTap,
   }) : super(key: key);
   @override
@@ -71,9 +74,10 @@ class MasterNoteItem extends StatelessWidget {
                 ),
                 // onTap: () => onTap(note),
                 onLongPress: () => onLongPressed(note),
+                leading: Text("${index + 1}."),
                 title: Text(
-                  "${note.title} - ${note.quantity}",
-                  style: TextStyle(
+                  "${note.title}    -    ${note.quantity}",
+                  style: GoogleFonts.mandali(
                     decoration: note.completed
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,

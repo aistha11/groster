@@ -195,13 +195,26 @@ class _ChatScreenState extends State<ChatScreen> {
 
   getMessage(Message message) {
     return message.type != MESSAGE_TYPE_IMAGE
-        ? Text(
-            message.message,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0,
-            ),
-          )
+        ? 
+        // Text(
+        //     message.message,
+        //     style: TextStyle(
+        //       color: Colors.white,
+        //       fontSize: 16.0,
+        //     ),
+        //   )
+        RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: 19.0,
+                  color: Colors.black,
+                ),
+                children: <TextSpan>[
+                  TextSpan(text: "${message.message}"),
+                  Utils.getMessageTime(message.timestamp),
+                ],
+              ),
+            )
         : message.photoUrl != null
             ? GestureDetector(
               onTap: (){

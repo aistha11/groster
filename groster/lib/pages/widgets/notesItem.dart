@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:groster/models/note.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -6,6 +7,7 @@ class NoteItem extends StatelessWidget {
   final Note note;
   final Function(Note) onEdit;
   final Function(Note) onDelete;
+  final int index;
   // final Function(Note) onTap;
   final Function(Note) onLongPressed;
   const NoteItem({
@@ -14,6 +16,7 @@ class NoteItem extends StatelessWidget {
     @required this.onEdit,
     @required this.onDelete,
     this.onLongPressed,
+    this.index
     // this.onTap,
   }) : super(key: key);
   @override
@@ -45,20 +48,20 @@ class NoteItem extends StatelessWidget {
         ],
         child: ListTile(
           // onTap: () => onTap(note),
-          // leading: Icon(FontAwesomeIcons.circle),
+          leading: Text("${index + 1}."),
           title: Text(
-            "${note.title}   -   ${note.quantity}",
-            style: TextStyle(
+            "${note.title}     -     ${note.quantity}",
+            style: GoogleFonts.mandali(
               decoration: note.completed
                   ? TextDecoration.lineThrough
-                  : TextDecoration.none,
+                  : TextDecoration.none, 
             ),
           ),
           subtitle: Text(
             note.createdAt.toString(),
             style: TextStyle(fontSize: 11.0),
           ),
-          onLongPress: () => onLongPressed(note),
+          onLongPress: () => onLongPressed(note), 
         ),
       ),
     );

@@ -12,8 +12,7 @@ class UniversalVariables {
   static final Color gradientColorStart = Color(0xff00b6f3);
   static final Color gradientColorEnd = Color(0xff0184dc);
 
-  static final Color senderColor = Color(0xff2b343b);
-  static final Color receiverColor = Color(0xff1e2225);
+  
 
   static final Gradient fabGradient = LinearGradient(
       colors: [gradientColorStart, gradientColorEnd],
@@ -33,4 +32,7 @@ class UniversalVariables {
   static final Color iconProfileCol = Color.fromRGBO(239, 213, 96, 0.8);
   //For User last message color
   static final Color lastMsgCol = Colors.black26;
+  //Sender and Receiver Color
+  static final Color senderColor = Color.fromRGBO(73, 222, 135,0.7);
+  static final Color receiverColor = Colors.grey[600];
 }

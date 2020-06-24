@@ -152,7 +152,7 @@ class Profile extends StatelessWidget {
                   ),
                   ListTile(
                     leading: IconButton(
-                      tooltip: "SHARE APP",
+                      tooltip: "Tell a friend",
                       icon: Icon(
                         SHARE_ICON,
                         // color: UniversalVariables.iconCol,
@@ -166,7 +166,7 @@ class Profile extends StatelessWidget {
                       },
                     ),
                     title: Text(
-                      "Share App",
+                      "Tell a friend",
                       // style: TextStyle(
                       //   color: Colors.white,
                       // ),

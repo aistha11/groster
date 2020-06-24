@@ -168,29 +168,59 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
 
   getMessage(GroupMessage message) {
     return message.type != MESSAGE_TYPE_IMAGE
-        ? Text(
-            message.message,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0,
+        ? Container(
+            // child: Text(
+            //   "${message.message}",
+            //   textAlign: TextAlign.left,
+            //   style: TextStyle(
+            //     color: Colors.white,
+            //     fontSize: 16.0,
+            //   ),
+            // ),
+            child: RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: 19.0,
+                  color: Colors.black,
+                ),
+                children: <TextSpan>[
+                  TextSpan(text: "${message.message}"),
+                  Utils.getMessageTime(message.timestamp),
+                ],
+              ),
             ),
           )
         : message.photoUrl != null
             ? GestureDetector(
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (_){
-                  return PreviewImage(imgUrl: message.photoUrl,);
-                }));
-              },
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                    return PreviewImage(
+                      imgUrl: message.photoUrl,
+                    );
+                  }));
+                },
                 child: CachedImage(
                   message.photoUrl,
                   height: 250,
                   width: 250,
-                  radius: 10,
+                  // radius: 10,
                 ),
               )
             : Text("Url was null");
   }
+
+  Widget getReceiverName(String name) {
+    return Padding(
+      padding: EdgeInsets.only(left: 10, top: 5),
+      child: Text(
+        Utils.getFirstName(name),
+        textAlign: TextAlign.left,
+        style: TextStyle(fontSize: 11.0, color: UniversalVariables.mainCol),
+      ),
+    );
+  }
+
+  
 
   Widget receiverLayout(GroupMessage message) {
     Radius messageRadius = Radius.circular(10);
@@ -206,11 +236,17 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
           bottomLeft: messageRadius,
         ),
       ),
-      child: Padding(
-        padding: message.type != MESSAGE_TYPE_IMAGE
-            ? EdgeInsets.all(10)
-            : EdgeInsets.all(0),
-        child: getMessage(message),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          getReceiverName(message.senderName),
+          Padding(
+            padding: message.type != MESSAGE_TYPE_IMAGE
+                ? EdgeInsets.all(10)
+                : EdgeInsets.all(0),
+            child: getMessage(message),
+          ),
+        ],
       ),
     );
   }
@@ -227,6 +263,7 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
       GroupMessage _grpMessage = GroupMessage(
         groupId: sender.familyId,
         senderId: sender.uid,
+        senderName: sender.name,
         message: text,
         timestamp: Timestamp.now(),
         type: 'text',
@@ -326,7 +363,7 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
                       size: 20,
                     ),
                     onPressed: () => sendMessage(),
-                  ))
+                  )) 
               : Container()
         ],
       ),

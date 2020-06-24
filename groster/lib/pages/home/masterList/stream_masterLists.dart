@@ -42,7 +42,7 @@ class StreamMasterList extends StatelessWidget {
                   return QuietBox(
                     title: "This is where all your master list are shown",
                     subtitle:
-                        "Start adding your list which can be viewed by your family too",
+                        "Start adding your list which can be viewed by your group too",
                     buttonText: "Add To Master List",
                     navRoute: "/addMasterNote",
                   );
@@ -53,16 +53,19 @@ class StreamMasterList extends StatelessWidget {
                       return Divider(
                         color: UniversalVariables.secondCol,
                         thickness: 1,
+                        height: 1.0,
                       );
                     else
                       return Divider(
                         color: UniversalVariables.mainCol,
                         thickness: 1,
+                        height: 1.0,
                       );
                   },
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     return MasterNoteItem(
+                      index: index,
                       note: snapshot.data[index],
                       onLongPressed: (note)async{
                         MasterNote upNote = MasterNote(

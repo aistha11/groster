@@ -25,9 +25,9 @@ class OurFamily extends StatelessWidget {
       body: user.familyId == null
           ? Container(
               child: QuietBox(
-                  title: "Set up your Family Profile",
+                  title: "Set up your Group",
                   subtitle:
-                      "After this you can add the family list & group chat with your family",
+                      "After this you can add the master list & group chat with your group members",
                   buttonText: "SET UP NOW",
                   navRoute: "/setUpFamily"),
             )
@@ -89,7 +89,7 @@ class OurFamily extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "Family Group",
+                          "Group",
                           // style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -169,14 +169,14 @@ class OurFamily extends StatelessWidget {
                             // color: UniversalVariables.iconCol,
                           ),
                           title: Text(
-                            "Share",
+                            "Share Group",
                             // style: TextStyle(color: Colors.white),
                           ),
                           contentPadding: EdgeInsets.only(left: 70.0),
                           onTap: () {
                             Func.share(
                               context,
-                              "Setup Family with \nFamily Name : ${user.familyName} \n Family Id : ${user.familyId}",
+                              "Setup group to share list \nGroup Name : ${user.familyName} \n Group ID : ${user.familyId}",
                               "Join Family",
                             );
                           },

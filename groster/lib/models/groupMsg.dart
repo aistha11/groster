@@ -4,6 +4,7 @@ import 'package:groster/models/database_item.dart';
 class GroupMessage extends DatabaseItem{
   final String id;
   final String senderId;
+  final String senderName;
   final String groupId;
   final String type;
   final String message;
@@ -13,6 +14,7 @@ class GroupMessage extends DatabaseItem{
   GroupMessage({
     this.id,
     this.senderId,
+    this.senderName,
     this.groupId,
     this.type,
     this.message,
@@ -25,6 +27,7 @@ class GroupMessage extends DatabaseItem{
   GroupMessage.imageMessage({
     this.id,
     this.senderId,
+    this.senderName,
     this.groupId,
     this.message,
     this.type,
@@ -52,6 +55,7 @@ class GroupMessage extends DatabaseItem{
     map['type'] = this.type;
     map['timestamp'] = this.timestamp;
     map['photoUrl'] = this.photoUrl;
+    map['senderName'] = this.senderName;
     return map;
   }
 
@@ -71,6 +75,7 @@ class GroupMessage extends DatabaseItem{
     photoUrl=data["photoUrl"],
     senderId=data["senderId"],
     timestamp=data["timestamp"],
+    senderName = data["senderName"],
     type=data["type"],
     super(id);
 
@@ -80,6 +85,7 @@ class GroupMessage extends DatabaseItem{
     "photoUrl": photoUrl,
     "senderId":senderId,
     "timestamp":timestamp,
+    "senderName":senderName,
     "type":type
   };
 }

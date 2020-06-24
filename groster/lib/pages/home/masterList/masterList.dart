@@ -1,4 +1,4 @@
-import 'package:groster/constants/icons.dart';
+import 'package:groster/constants/styles.dart';
 import 'package:groster/pages/home/masterList/stream_masterLists.dart';
 import 'package:flutter/material.dart';
 import 'package:groster/pages/widgets/appbar.dart';
@@ -9,12 +9,12 @@ class MasterList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        leading: Icon(MASTER_ICON, color: Colors.black),
+        // leading: Icon(MASTER_ICON, color: Colors.black),
         title: Text(
           "Master List",
-          style: TextStyle(color: Colors.black),
+          style: APP_TITLE_STYLE,
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: StreamMasterList(),
       floatingActionButton: FloatingActionButton(
