@@ -20,7 +20,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
-  final User receiver;
+  final Muser receiver;
 
   ChatScreen({this.receiver});
 
@@ -39,7 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   FocusNode textFieldFocus = FocusNode();
   ScrollController _listScrollController = ScrollController();
 
-  User sender;
+  Muser sender;
   String _currentUserId;
   bool isWriting = false;
 
@@ -50,10 +50,10 @@ class _ChatScreenState extends State<ChatScreen> {
       _currentUserId = user.uid;
 
       setState(() {
-        sender = User(
+        sender = Muser(
           uid: user.uid,
           name: user.displayName,
-          profilePhoto: user.photoUrl,
+          profilePhoto: user.photoURL,
         );
       });
     });
@@ -120,9 +120,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget messageList() {
     return StreamBuilder(
-      stream: Firestore.instance
+      stream: FirebaseFirestore.instance
           .collection(MESSAGES_COLLECTION)
-          .document(_currentUserId)
+          .doc(_currentUserId)
           .collection(widget.receiver.uid)
           .orderBy(TIMESTAMP_FIELD, descending: true)
           .snapshots(),
@@ -143,10 +143,10 @@ class _ChatScreenState extends State<ChatScreen> {
           padding: EdgeInsets.all(10),
           controller: _listScrollController,
           reverse: true,
-          itemCount: snapshot.data.documents.length,
+          itemCount: snapshot.data.docs.length,
           itemBuilder: (context, index) {
             // mention the arrow syntax if you get the time
-            return chatMessageItem(snapshot.data.documents[index]);
+            return chatMessageItem(snapshot.data.docs[index]);
           },
         );
       },
@@ -154,7 +154,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget chatMessageItem(DocumentSnapshot snapshot) {
-    Message _message = Message.fromMap(snapshot.data);
+    Message _message = Message.fromMap(snapshot.data());
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15),

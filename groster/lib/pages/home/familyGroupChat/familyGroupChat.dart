@@ -30,7 +30,7 @@ class _FamilyGroupChatState extends State<FamilyGroupChat> {
   TextEditingController textFieldController = TextEditingController();
   FocusNode textFieldFocus = FocusNode();
   ScrollController _listScrollController = ScrollController();
-  User sender;
+  Muser sender;
   String _currentUserId;
   bool isWriting = false;
   showKeyboard() => textFieldFocus.requestFocus();

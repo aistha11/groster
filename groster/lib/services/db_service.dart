@@ -7,23 +7,23 @@ import 'package:groster/models/note.dart';
 
 class DatabaseService<T extends DatabaseItem> {
   final String collection;
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final T Function(String, Map<String, dynamic>) fromDS;
   final Map<String, dynamic> Function(T) toMap;
   DatabaseService(this.collection, {this.fromDS, this.toMap});
 
   Future<T> getSingle(String id) async {
-    var snap = await _db.collection(collection).document(id).get();
+    var snap = await _db.collection(collection).doc(id).get();
     if (!snap.exists) return null;
-    return fromDS(snap.documentID, snap.data);
+    return fromDS(snap.id, snap.data());
   }
 
   Stream<T> streamSingle(String id) {
     return _db
         .collection(collection)
-        .document(id)
+        .doc(id)
         .snapshots()
-        .map((snap) => fromDS(snap.documentID, snap.data));
+        .map((snap) => fromDS(snap.id, snap.data()));
   }
 
   Stream<List<T>> streamList(String uid) {
@@ -34,7 +34,7 @@ class DatabaseService<T extends DatabaseItem> {
         .orderBy("created_at", descending: true);
 
     return ref.snapshots().map((list) =>
-        list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
+        list.docs.map((doc) => fromDS(doc.id, doc.data())).toList());
   }
 
   Stream<List<T>> streamMasterList(String fuid) {
@@ -45,7 +45,7 @@ class DatabaseService<T extends DatabaseItem> {
         .orderBy("created_at", descending: true);
 
     return ref.snapshots().map((list) =>
-        list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
+        list.docs.map((doc) => fromDS(doc.id, doc.data())).toList());
   }
 
   Stream<List<T>> streamGroupMessages(String guid) {
@@ -55,7 +55,7 @@ class DatabaseService<T extends DatabaseItem> {
         .orderBy("timestamp", descending: true);
 
     return ref.snapshots().map((list) =>
-        list.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
+        list.docs.map((doc) => fromDS(doc.id, doc.data())).toList());
   }
 
   Future<List<T>> getQueryList({List<QueryArgs> args = const []}) async {
@@ -69,12 +69,12 @@ class DatabaseService<T extends DatabaseItem> {
     }
     QuerySnapshot query;
     if (ref != null)
-      query = await ref.getDocuments();
+      query = await ref.get();
     else
-      query = await collref.getDocuments();
+      query = await collref.get();
 
-    return query.documents
-        .map((doc) => fromDS(doc.documentID, doc.data))
+    return query.docs
+        .map((doc) => fromDS(doc.id, doc.data()))
         .toList();
   }
 
@@ -90,7 +90,7 @@ class DatabaseService<T extends DatabaseItem> {
     else
       query = collref.snapshots();
     return query.map((snap) =>
-        snap.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
+        snap.docs.map((doc) => fromDS(doc.id, doc.data())).toList());
   }
 
   Future<List<T>> getListFromTo(String field, DateTime from, DateTime to,
@@ -99,9 +99,9 @@ class DatabaseService<T extends DatabaseItem> {
     for (QueryArgs arg in args) {
       ref = ref.where(arg.key, isEqualTo: arg.value);
     }
-    QuerySnapshot query = await ref.startAt([from]).endAt([to]).getDocuments();
-    return query.documents
-        .map((doc) => fromDS(doc.documentID, doc.data))
+    QuerySnapshot query = await ref.startAt([from]).endAt([to]).get();
+    return query.docs
+        .map((doc) => fromDS(doc.id, doc.data()))
         .toList();
   }
 
@@ -113,12 +113,12 @@ class DatabaseService<T extends DatabaseItem> {
     }
     var query = ref.startAfter([to]).endAt([from]).snapshots();
     return query.map((snap) =>
-        snap.documents.map((doc) => fromDS(doc.documentID, doc.data)).toList());
+        snap.docs.map((doc) => fromDS(doc.id, doc.data())).toList());
   }
 
   Future<dynamic> createItem(T item, {String id}) {
     if (id != null) {
-      return _db.collection(collection).document(id).setData(toMap(item));
+      return _db.collection(collection).doc(id).set(toMap(item));
     } else {
       return _db.collection(collection).add(toMap(item));
     }
@@ -126,7 +126,7 @@ class DatabaseService<T extends DatabaseItem> {
 
   Future<dynamic> createMasterItem(T item, {String id}) {
     if (id != null) {
-      return _db.collection(collection).document(id).setData(toMap(item));
+      return _db.collection(collection).doc(id).set(toMap(item));
     } else {
       return _db.collection(collection).add(toMap(item));
     }
@@ -135,12 +135,12 @@ class DatabaseService<T extends DatabaseItem> {
   Future<void> updateItem(T item) {
     return _db
         .collection(collection)
-        .document(item.id)
-        .setData(toMap(item), merge: true);
+        .doc(item.id)
+        .set(toMap(item), SetOptions(merge: true));
   }
 
   Future<void> removeItem(String id) {
-    return _db.collection(collection).document(id).delete();
+    return _db.collection(collection).doc(id).delete();
   }
 }
 

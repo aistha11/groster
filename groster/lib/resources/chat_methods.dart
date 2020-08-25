@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class ChatMethods {
-  static final Firestore _firestore = Firestore.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final CollectionReference _messageCollection =
       _firestore.collection(MESSAGES_COLLECTION);
@@ -20,23 +20,23 @@ class ChatMethods {
     var map = message.toMap();
 
     await _messageCollection
-        .document(message.senderId)
+        .doc(message.senderId)
         .collection(message.receiverId)
         .add(map);
 
     addToContacts(senderId: message.senderId, receiverId: message.receiverId);
 
     return await _messageCollection
-        .document(message.receiverId)
+        .doc(message.receiverId)
         .collection(message.senderId)
         .add(map);
   }
 
   DocumentReference getContactsDocument({String of, String forContact}) =>
       _userCollection
-          .document(of)
+          .doc(of)
           .collection(CONTACTS_COLLECTION)
-          .document(forContact);
+          .doc(forContact);
 
   addToContacts({String senderId, String receiverId}) async {
     Timestamp currentTime = Timestamp.now();
@@ -63,7 +63,7 @@ class ChatMethods {
       var receiverMap = receiverContact.toMap(receiverContact);
 
       await getContactsDocument(of: senderId, forContact: receiverId)
-          .setData(receiverMap);
+          .set(receiverMap);
     }
   }
 
@@ -85,7 +85,7 @@ class ChatMethods {
       var senderMap = senderContact.toMap(senderContact);
 
       await getContactsDocument(of: receiverId, forContact: senderId)
-          .setData(senderMap);
+          .set(senderMap);
     }
   }
 
@@ -105,18 +105,18 @@ class ChatMethods {
 
     // var map = Map<String, dynamic>();
     await _messageCollection
-        .document(message.senderId)
+        .doc(message.senderId)
         .collection(message.receiverId)
         .add(map);
 
     _messageCollection
-        .document(message.receiverId)
+        .doc(message.receiverId)
         .collection(message.senderId)
         .add(map);
   }
 
   Stream<QuerySnapshot> fetchContacts({String userId}) => _userCollection
-      .document(userId)
+      .doc(userId)
       .collection(CONTACTS_COLLECTION)
       .snapshots(); 
 
@@ -125,7 +125,7 @@ class ChatMethods {
     @required String receiverId,
   }) =>
       _messageCollection
-          .document(senderId)
+          .doc(senderId)
           .collection(receiverId)
           .orderBy("timestamp")
           .snapshots();

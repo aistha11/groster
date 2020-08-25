@@ -14,18 +14,18 @@ import 'package:provider/provider.dart';
 import 'last_message_container.dart';
 
 class ContactView extends StatelessWidget {
-  final User cUser;
+  final Muser cUser;
   final UserRepository _authMethods = UserRepository.instance();
 
   ContactView(this.cUser);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User>(
+    return FutureBuilder<Muser>(
       future: _authMethods.getUserDetailsById(cUser.uid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          User user = snapshot.data;
+          Muser user = snapshot.data;
 
           return ViewLayout(
             contact: user,
@@ -38,7 +38,7 @@ class ContactView extends StatelessWidget {
 }
 
 class ViewLayout extends StatelessWidget {
-  final User contact;
+  final Muser contact;
   final ChatMethods _chatMethods = ChatMethods();
 
   ViewLayout({

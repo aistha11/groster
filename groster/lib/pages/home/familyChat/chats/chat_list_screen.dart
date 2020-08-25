@@ -116,7 +116,7 @@ class ChatListContainer extends StatelessWidget {
         stream: _userRepository.fetchFamUsers(userRepository.user, userRepository.getUser.familyId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var docList = snapshot.data.documents;
+            var docList = snapshot.data.docs;
 
             if (docList.isEmpty || userRepository.getUser.familyId == null) {
               return QuietBox(
@@ -133,7 +133,7 @@ class ChatListContainer extends StatelessWidget {
               itemCount: docList.length,
               itemBuilder: (context, index) {
                 // Contact contact = Contact.fromMap(docList[index].data);
-                User fuser = User.fromMap(docList[index].data);
+                Muser fuser = Muser.fromMap(docList[index].data());
                 return fuser.uid != userRepository.getUser.uid ? ContactView(fuser) : Container();
               },
             );

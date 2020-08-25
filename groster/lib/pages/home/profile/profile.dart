@@ -16,7 +16,7 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserRepository userRepository = Provider.of<UserRepository>(context);
     userRepository.refreshUser();
-    final User user = userRepository.getUser;
+    final Muser user = userRepository.getUser;
     return Scaffold(
       backgroundColor: UniversalVariables.backgroundCol,
       body: Container(

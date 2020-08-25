@@ -18,7 +18,7 @@ class OurFamily extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserRepository userRepository = Provider.of<UserRepository>(context);
     _userRepository.refreshUser();
-    final User user = userRepository.getUser;
+    final Muser user = userRepository.getUser;
 
     return Scaffold(
       backgroundColor: UniversalVariables.backgroundCol,
@@ -191,7 +191,7 @@ class OurFamily extends StatelessWidget {
                           contentPadding: EdgeInsets.only(left: 70.0),
                           onTap: () async {
                             if (await Func.confirmBox(context,"Leave Group","Do you really want to leave group?")) {
-                              User upUser = User(
+                              Muser upUser = Muser(
                                 uid: user.uid,
                                 email: user.email,
                                 name: user.name,

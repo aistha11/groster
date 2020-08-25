@@ -33,10 +33,10 @@ class OnlineDotIndicator extends StatelessWidget {
           uid: uid,
         ),
         builder: (context, snapshot) {
-          User user;
+          Muser user;
 
           if (snapshot.hasData && snapshot.data.data != null) {
-            user = User.fromMap(snapshot.data.data);
+            user = Muser.fromMap(snapshot.data.data());
           }
 
           return Container(

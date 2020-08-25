@@ -9,12 +9,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:groster/services/db_service.dart';
 
 class StorageMethods {
-  static final Firestore firestore = Firestore.instance;
+  static final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   StorageReference _storageReference;
 
   //user class
-  User user = User();
+  Muser user = Muser();
 
   Future<String> uploadImageToStorage(File imageFile) async {
     // mention try catch later on

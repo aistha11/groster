@@ -12,14 +12,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepository with ChangeNotifier {
   FirebaseAuth _auth;
-  FirebaseUser _user;
+  User _user;
   GoogleSignIn _googleSignIn;
-  User _fuser;
+  Muser _fuser;
   Status _status = Status.Uninitialized;
   static final FacebookLogin facebookSignIn = new FacebookLogin();
 
-  static final Firestore _firestore = Firestore.instance;
-  static final Firestore firestore = Firestore.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   static final CollectionReference _userCollection =
       _firestore.collection(USERS_COLLECTION);
@@ -27,17 +27,17 @@ class UserRepository with ChangeNotifier {
   UserRepository.instance()
       : _auth = FirebaseAuth.instance,
         _googleSignIn = GoogleSignIn() {
-    _auth.onAuthStateChanged.listen(_onAuthStateChanged);
+    _auth.authStateChanges().listen(_onAuthStateChanged);
   }
 
   Status get status => _status;
-  FirebaseUser get user => _user;
-  User get getUser => _fuser;
+  User get user => _user;
+  Muser get getUser => _fuser;
 
-  Future<FirebaseUser> getCurrentUser() async {
+  Future<User> getCurrentUser() async {
     try {
-      FirebaseUser currentUser;
-      currentUser = await _auth.currentUser();
+      User currentUser;
+      currentUser = _auth.currentUser;
       return currentUser;
     } catch (e) {
       print(e);
@@ -45,19 +45,19 @@ class UserRepository with ChangeNotifier {
     }
   }
 
-   Future<void> refreshUser() async {
-    User ruser = await getUserDetails();
+  Future<void> refreshUser() async {
+    Muser ruser = await getUserDetails();
     _fuser = ruser;
     notifyListeners();
   }
 
-  Future<User> getUserDetails() async {
+  Future<Muser> getUserDetails() async {
     try {
-      FirebaseUser currentUser = await getCurrentUser();
+      User currentUser = await getCurrentUser();
 
       DocumentSnapshot documentSnapshot =
-          await _userCollection.document(currentUser.uid).get();
-      return User.fromMap(documentSnapshot.data);
+          await _userCollection.doc(currentUser.uid).get();
+      return Muser.fromMap(documentSnapshot.data());
     } catch (e) {
       print("Error while getiing user detail");
       print(e);
@@ -65,11 +65,11 @@ class UserRepository with ChangeNotifier {
     }
   }
 
-  Future<User> getUserDetailsById(id) async {
+  Future<Muser> getUserDetailsById(id) async {
     try {
       DocumentSnapshot documentSnapshot =
-          await _userCollection.document(id).get();
-      return User.fromMap(documentSnapshot.data);
+          await _userCollection.doc(id).get();
+      return Muser.fromMap(documentSnapshot.data());
     } catch (e) {
       print(e);
       return null;
@@ -79,116 +79,122 @@ class UserRepository with ChangeNotifier {
   void setUserState({@required String userId, @required UserState userState}) {
     int stateNum = Utils.stateToNum(userState);
 
-    _userCollection.document(userId).updateData({
+    _userCollection.doc(userId).update({
       "state": stateNum,
     });
   }
 
   Stream<DocumentSnapshot> getUserStream({@required String uid}) =>
-      _userCollection.document(uid).snapshots();
+      _userCollection.doc(uid).snapshots();
 
- 
-
-  Future<bool> authenticateUser(FirebaseUser nuser) async {
+  Future<bool> authenticateUser(User nuser) async {
     QuerySnapshot result = await firestore
         .collection(USERS_COLLECTION)
         .where(EMAIL_FIELD, isEqualTo: nuser.email)
-        .where("uid",isEqualTo: nuser.uid)
-        .getDocuments();
+        .where("uid", isEqualTo: nuser.uid)
+        .get();
 
-    final List<DocumentSnapshot> docs = result.documents;
+    final List<DocumentSnapshot> docs = result.docs;
 
     //if user is registered then length of list > 0 or else less than 0
     return docs.length == 0 ? true : false;
   }
 
-  Future<void> addDataToDb(FirebaseUser currentUser) async {
+  Future<void> addDataToDb(User currentUser) async {
     String username = Utils.getUsername(currentUser.email);
 
-    User user = User(
+    Muser muser = Muser(
         uid: currentUser.uid,
         email: currentUser.email,
         name: currentUser.displayName,
-        profilePhoto: currentUser.photoUrl,
+        profilePhoto: currentUser.photoURL,
         username: username);
 
     firestore
         .collection(USERS_COLLECTION)
-        .document(currentUser.uid)
-        .setData(user.toMap(user));
+        .doc(currentUser.uid)
+        .set(muser.toMap(muser));
   }
 
-  Future<bool> updateFamily(String familyName, String familyId)async{
-    try{
-      User upuser = User(
-      uid: getUser.uid,
-      email: getUser.email,
-      name: getUser.name,
-      profilePhoto: getUser.profilePhoto,
-      username: getUser.username,
-      familyName: familyName,
-      familyId: familyId,
-    );
-    await firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upuser.toMap(upuser));
-    refreshUser();
-    notifyListeners();
-    return true;
-    }catch(e){
+  Future<bool> updateFamily(String familyName, String familyId) async {
+    try {
+      Muser upuser = Muser(
+        uid: getUser.uid,
+        email: getUser.email,
+        name: getUser.name,
+        profilePhoto: getUser.profilePhoto,
+        username: getUser.username,
+        familyName: familyName,
+        familyId: familyId,
+      );
+      await firestore
+          .collection(USERS_COLLECTION)
+          .doc(user.uid)
+          .update(upuser.toMap(upuser));
+      refreshUser();
+      notifyListeners();
+      return true;
+    } catch (e) {
       print("Updating");
       print(e.toString());
       return false;
     }
   }
 
-  Future<bool> leaveFamily(User upuser)async{
-    try{
-    await firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upuser.toMap(upuser));
-    refreshUser();
-    notifyListeners();
-    return true;
-    }catch(e){
+  Future<bool> leaveFamily(Muser upuser) async {
+    try {
+      await firestore
+          .collection(USERS_COLLECTION)
+          .doc(user.uid)
+          .update(upuser.toMap(upuser));
+      refreshUser();
+      notifyListeners();
+      return true;
+    } catch (e) {
       print("Updating");
       print(e.toString());
       return false;
     }
   }
 
-  Future<bool> updateProfile(User upUser)async{
+  Future<bool> updateProfile(Muser upUser) async {
     refreshUser();
-    try{
-    //   User upuser = User(
-    //   uid: getUser.uid,
-    //   email: getUser.email,
-    //   name: name,
-    //   profilePhoto: photoUrl,
-    //   username: getUser.username,
-    //   familyName: getUser.familyName,
-    //   familyId: getUser.familyId,
-    // );
-    await firestore.collection(USERS_COLLECTION).document(user.uid).updateData(upUser.toMap(upUser));
-    refreshUser();
-    notifyListeners();
-    return true;
-    }catch(e){
+    try {
+      //   User upuser = User(
+      //   uid: getUser.uid,
+      //   email: getUser.email,
+      //   name: name,
+      //   profilePhoto: photoUrl,
+      //   username: getUser.username,
+      //   familyName: getUser.familyName,
+      //   familyId: getUser.familyId,
+      // );
+      await firestore
+          .collection(USERS_COLLECTION)
+          .doc(user.uid)
+          .update(upUser.toMap(upUser));
+      refreshUser();
+      notifyListeners();
+      return true;
+    } catch (e) {
       return false;
     }
   }
 
-  Future<void> addDataToFdb(FirebaseUser newUser, String name) async {
+  Future<void> addDataToFdb(User newUser, String name) async {
     String username = Utils.getUsername(newUser.email);
 
-
-    User user = User(
+    Muser muser = Muser(
         uid: newUser.uid,
         email: newUser.email,
         name: name,
-        profilePhoto: BLANK_IMAGE, 
+        profilePhoto: BLANK_IMAGE,
         username: username);
 
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection(USERS_COLLECTION)
-        .document(newUser.uid)
-        .setData(user.toMap(user));
+        .doc(newUser.uid)
+        .set(muser.toMap(muser));
   }
 
   Future<bool> signIn(String email, String password) async {
@@ -206,7 +212,8 @@ class UserRepository with ChangeNotifier {
     }
   }
 
-  Future<bool> signUp(BuildContext context,String email, String password, String name) async {
+  Future<bool> signUp(
+      BuildContext context, String email, String password, String name) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
@@ -237,17 +244,16 @@ class UserRepository with ChangeNotifier {
       GoogleSignInAuthentication _signInAuthentication =
           await _signInAccount.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
+      final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: _signInAuthentication.accessToken,
           idToken: _signInAuthentication.idToken);
 
-      await _auth.signInWithCredential(credential).then((value){
-        if(value.user != null){
-             authenticateUser(value.user).then((isNewUser){
-               if(isNewUser)
-                  addDataToDb(value.user);
-             });
-           }
+      await _auth.signInWithCredential(credential).then((value) {
+        if (value.user != null) {
+          authenticateUser(value.user).then((isNewUser) {
+            if (isNewUser) addDataToDb(value.user);
+          });
+        }
       });
     } catch (e) {
       Func.showError(context, "Error While Sign In With Google");
@@ -289,19 +295,17 @@ class UserRepository with ChangeNotifier {
   // }
 
   Future<Null> signUpWithFacebook(context) async {
-    try{
+    try {
       _status = Status.Authenticating;
       notifyListeners();
-      final FacebookLoginResult result =
-        await facebookSignIn.logIn(['email']);
+      final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
 
-    switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final FacebookAccessToken accessToken = result.accessToken;
-        final AuthCredential credential = FacebookAuthProvider.getCredential(
-          accessToken: result.accessToken.token,
-        );
-        print('''
+      switch (result.status) {
+        case FacebookLoginStatus.loggedIn:
+          final FacebookAccessToken accessToken = result.accessToken;
+          final AuthCredential credential =
+              FacebookAuthProvider.credential(result.accessToken.token);
+          print('''
          Logged in!
          
          Token: ${accessToken.token}
@@ -310,49 +314,51 @@ class UserRepository with ChangeNotifier {
          Permissions: ${accessToken.permissions}
          Declined permissions: ${accessToken.declinedPermissions}
          ''');
-         await _auth.signInWithCredential(credential).then((value){
-           if(value.user != null){
-             authenticateUser(value.user).then((isNewUser){
-               addDataToDb(value.user);
-             });
-           }
-         });
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        _status = Status.Unauthenticated;
-        notifyListeners();
-        print('Login cancelled by the user.');
-        break;
-      case FacebookLoginStatus.error:
-        _status = Status.Unauthenticated;
-        notifyListeners();
-        Func.showError(context, 'Something went wrong with the login process.\n'
-            'Here\'s the error Facebook gave us: ${result.errorMessage}');
-        break;
-    }
-    }catch(e){
+          await _auth.signInWithCredential(credential).then((value) {
+            if (value.user != null) {
+              authenticateUser(value.user).then((isNewUser) {
+                addDataToDb(value.user);
+              });
+            }
+          });
+          break;
+        case FacebookLoginStatus.cancelledByUser:
+          _status = Status.Unauthenticated;
+          notifyListeners();
+          print('Login cancelled by the user.');
+          break;
+        case FacebookLoginStatus.error:
+          _status = Status.Unauthenticated;
+          notifyListeners();
+          Func.showError(
+              context,
+              'Something went wrong with the login process.\n'
+              'Here\'s the error Facebook gave us: ${result.errorMessage}');
+          break;
+      }
+    } catch (e) {
       print(e.toString());
     }
   }
 
-  Future<List<User>> fetchAllUsers(FirebaseUser currentUser) async {
-    List<User> userList = List<User>();
+  Future<List<Muser>> fetchAllUsers(User currentUser) async {
+    List<Muser> userList = List<Muser>();
 
     QuerySnapshot querySnapshot =
-        await firestore.collection(USERS_COLLECTION).getDocuments();
-    for (var i = 0; i < querySnapshot.documents.length; i++) {
-      if (querySnapshot.documents[i].documentID != currentUser.uid) {
-        userList.add(User.fromMap(querySnapshot.documents[i].data));
+        await firestore.collection(USERS_COLLECTION).get();
+    for (var i = 0; i < querySnapshot.docs.length; i++) {
+      if (querySnapshot.docs[i].id != currentUser.uid) {
+        userList.add(Muser.fromMap(querySnapshot.docs[i].data()));
       }
     }
     return userList;
   }
 
-  Stream<QuerySnapshot> fetchFamUsers(FirebaseUser currentUser, String famId) =>
-         firestore.collection(USERS_COLLECTION).where("family_id", isEqualTo: famId).snapshots();
-
-
-  
+  Stream<QuerySnapshot> fetchFamUsers(User currentUser, String famId) =>
+      firestore
+          .collection(USERS_COLLECTION)
+          .where("family_id", isEqualTo: famId)
+          .snapshots();
 
   Future<void> signOut({context}) async {
     try {
@@ -370,7 +376,7 @@ class UserRepository with ChangeNotifier {
     }
   }
 
-  Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
+  Future<void> _onAuthStateChanged(User firebaseUser) async {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
     } else {

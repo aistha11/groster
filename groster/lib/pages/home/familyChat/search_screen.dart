@@ -15,7 +15,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final UserRepository _userRepository = UserRepository.instance();
 
-  List<User> userList;
+  List<Muser> userList;
   String query = "";
   TextEditingController searchController = TextEditingController();
 
@@ -23,8 +23,8 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
 
-    _userRepository.getCurrentUser().then((FirebaseUser user) {
-      _userRepository.fetchAllUsers(user).then((List<User> list) {
+    _userRepository.getCurrentUser().then((User user) {
+      _userRepository.fetchAllUsers(user).then((List<Muser> list) {
         setState(() {
           userList = list;
         });
@@ -108,10 +108,10 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   buildSuggestions(String query, String familyId) {
-    final List<User> suggestionList = query.isEmpty
+    final List<Muser> suggestionList = query.isEmpty
         ? []
         : userList != null
-            ? userList.where((User user) {
+            ? userList.where((Muser user) {
                 //Search By UserName or Name 
                 // String _getUsername = user.username.toLowerCase();
                 // String _getName = user.name.toLowerCase();
@@ -145,7 +145,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: ListView.builder(
         itemCount: suggestionList.length,
         itemBuilder: ((context, index) {
-          User searchedUser = User(
+          Muser searchedUser = Muser(
               uid: suggestionList[index].uid,
               profilePhoto: suggestionList[index].profilePhoto,
               name: suggestionList[index].name,

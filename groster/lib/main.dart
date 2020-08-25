@@ -9,8 +9,13 @@ import 'package:groster/pages/wrapper.dart';
 import 'package:groster/provider/image_upload_provider.dart';
 import 'package:groster/resources/user_repository.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() => runApp(MyApp());
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

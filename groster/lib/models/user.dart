@@ -1,4 +1,4 @@
-class User {
+class Muser {
   String uid;
   String name;
   String email;
@@ -9,7 +9,7 @@ class User {
   String familyId;
   String familyName;
 
-  User({
+  Muser({
     this.uid,
     this.name,
     this.email,
@@ -21,7 +21,7 @@ class User {
     this.familyName
   });
 
-  Map toMap(User user) {
+  Map toMap(Muser user) {
     var data = Map<String, dynamic>();
     data['uid'] = user.uid;
     data['name'] = user.name;
@@ -36,7 +36,7 @@ class User {
   }
 
   // Named constructor
-  User.fromMap(Map<String, dynamic> mapData) {
+  Muser.fromMap(Map<String, dynamic> mapData) {
     this.uid = mapData['uid'];
     this.name = mapData['name'];
     this.email = mapData['email'];

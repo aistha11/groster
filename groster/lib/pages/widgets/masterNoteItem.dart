@@ -36,7 +36,7 @@ class MasterNoteItem extends StatelessWidget {
       future: userRepository.getUserDetailsById(note.userId),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          User user = snapshot.data;
+          Muser user = snapshot.data;
           return Container(
             margin: const EdgeInsets.symmetric(
               vertical: 4.0,

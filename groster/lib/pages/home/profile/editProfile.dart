@@ -11,7 +11,7 @@ import 'package:groster/utils/utilities.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfile extends StatefulWidget {
-  final User eUser;
+  final Muser eUser;
   final int mode;
   EditProfile({@required this.eUser, @required this.mode});
   @override
@@ -217,7 +217,7 @@ class _EditProfileState extends State<EditProfile> {
                         _saving = true;
                       });
                       Func.hideKeyboard(textFieldFocus);
-                      User upUser = User(
+                      Muser upUser = Muser(
                         uid: widget.eUser.uid,
                         name: "${_firstName.text} ${_lastName.text}",
                         profilePhoto: imageUrl,

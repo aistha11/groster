@@ -27,7 +27,7 @@ class FamilyMembers extends StatelessWidget {
               userRepository.user, userRepository.getUser.familyId),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              var docList = snapshot.data.documents;
+              var docList = snapshot.data.docs;
 
               if (docList.isEmpty) {
                 return Container();
@@ -41,7 +41,7 @@ class FamilyMembers extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: docList.length,
                 itemBuilder: (context, index) {
-                  User fuser = User.fromMap(docList[index].data);
+                  Muser fuser = Muser.fromMap(docList[index].data());
                   // return fuser.uid != userRepository.getUser.uid?FamilyUsers(fuser,index):Container();
                   return FamilyUsers(fuser, index);
                 },
@@ -54,18 +54,18 @@ class FamilyMembers extends StatelessWidget {
 }
 
 class FamilyUsers extends StatelessWidget {
-  final User fuser;
+  final Muser fuser;
   final int index;
   FamilyUsers(this.fuser, this.index);
   @override
   Widget build(BuildContext context) {
     UserRepository userRepository = Provider.of<UserRepository>(context);
     userRepository.refreshUser();
-    return FutureBuilder<User>(
+    return FutureBuilder<Muser>(
       future: userRepository.getUserDetailsById(fuser.uid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          User user = snapshot.data;
+          Muser user = snapshot.data;
 
           return GestureDetector(
             onTap: () {
